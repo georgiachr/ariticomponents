@@ -6407,7 +6407,7 @@ function $TemplateCacheProvider() {
  * Directives Guide} for an example.
  *
  * There are very few scenarios where element replacement is required for the application function,
- * the main one being reusable custom components that are used within SVG contexts
+ * the admin one being reusable custom components that are used within SVG contexts
  * (because SVG doesn't work with custom elements in the DOM tree).
  *
  * #### `transclude`
@@ -8607,7 +8607,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       if (jqLite.hasData(firstElementToRemove)) {
         // Copy over user data (that includes Angular's $scope etc.). Don't copy private
         // data here because there's no public interface in jQuery to do that and copying over
-        // event listeners (which is the main use of private data) wouldn't work anyway.
+        // event listeners (which is the admin use of private data) wouldn't work anyway.
         jqLite(newNode).data(jqLite(firstElementToRemove).data());
 
         // Remove data of the replaced element. We cannot just call .remove()
@@ -12186,7 +12186,7 @@ function $LocationProvider() {
  * Simple service for logging. Default implementation safely writes the message
  * into the browser's console (if present).
  *
- * The main purpose of this service is to simplify debugging and troubleshooting.
+ * The admin purpose of this service is to simplify debugging and troubleshooting.
  *
  * The default is to log `debug` messages. You can use
  * {@link ng.$logProvider ng.$logProvider#debugEnabled} to change this.
@@ -14426,7 +14426,7 @@ function $ParseProvider() {
  *
  * # Differences between Kris Kowal's Q and $q
  *
- *  There are two main differences:
+ *  There are two admin differences:
  *
  * - $q is integrated with the {@link ng.$rootScope.Scope} Scope model observation
  *   mechanism in angular, which means faster propagation of resolution or rejection into your
@@ -16422,7 +16422,7 @@ function adjustMatchers(matchers) {
  * ng.$sceDelegateProvider#resourceUrlWhitelist $sceDelegateProvider.resourceUrlWhitelist} and
  * {@link ng.$sceDelegateProvider#resourceUrlBlacklist $sceDelegateProvider.resourceUrlBlacklist}
  *
- * For the general details about this service in Angular, read the main page for {@link ng.$sce
+ * For the general details about this service in Angular, read the admin page for {@link ng.$sce
  * Strict Contextual Escaping (SCE)}.
  *
  * **Example**:  Consider the following case. <a name="example"></a>
