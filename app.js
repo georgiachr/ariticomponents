@@ -16,7 +16,6 @@
  *
  * The same command-line arguments are supported, e.g.:
  * `node app.js --silent --port=80 --prod`
- * Write some more documentation
  */
 
 // Ensure we're in the project directory, so relative paths work as expected

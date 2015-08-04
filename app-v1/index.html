@@ -2,7 +2,9 @@
 <html ng-app="ariti">
 
 <head>
+    <base href="/">
     <title>A test Sails App</title>
+
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -28,9 +30,12 @@
             + Import stylesheets from other directories
             + Use a different or additional preprocessor, like SASS, SCSS or Stylus
     -->
+
   <link rel="stylesheet" href="styles/bootstrap-theme.css">
   <link rel="stylesheet" href="styles/bootstrap.css">
   <link rel="stylesheet" href="styles/importer.css">
+  <link rel="stylesheet" href="styles/myapp.css">
+
     <!--STYLES-->
     <!--STYLES END-->
 
@@ -47,17 +52,28 @@
 
 
      <!-- main window -->
-     <div class="row" >
-       <div class="col-md-1" style="background-color: indianred">LEFT navbar</div>
-       <div class="col-md-10" style="background-color: wheat">main working area</div>
-       <div class="col-md-1" style="background-color: indianred">RIGHT navbar</div>
+     <div class="container-fluid ">
+
+       <div class="row fill">
+
+          <div class="col-md-1" style="background-color: indianred">
+            <h1>LEFT</h1>
+          </div>
+
+          <div class="col-md-10" style="background-color: wheat">
+            <ui-view name="mainwindow"></ui-view>
+          </div>
+
+
+          <div class="col-md-1" style="background-color: indianred">
+            <ui-view name="navright"></ui-view>
+          </div>
+
+       </div>
+
      </div>
 
     <!-- FOOTER -->
-
-
-
-
 
 
   </div>
