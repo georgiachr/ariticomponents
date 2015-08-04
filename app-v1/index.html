@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="ariti">
+
+<head>
+    <title>A test Sails App</title>
+
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+    <!--
+        Stylesheets and Preprocessors
+        ==============================
+
+        You can always bring in CSS files manually with `<link>` tags, or asynchronously
+        using a solution like AMD (RequireJS).  Or, if you like, you can take advantage
+        of Sails' conventional asset pipeline (boilerplate Gruntfile).
+
+        By default, stylesheets from your `app-v1/styles` folder are included
+        here automatically (between STYLES and STYLES END). Both CSS (.css) and LESS (.less)
+        are supported. In production, your styles will be minified and concatenated into
+        a single file.
+
+        To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
+        For example, here are a few things you could do:
+
+            + Change the order of your CSS files
+            + Import stylesheets from other directories
+            + Use a different or additional preprocessor, like SASS, SCSS or Stylus
+    -->
+  <link rel="stylesheet" href="styles/bootstrap-theme.css">
+  <link rel="stylesheet" href="styles/bootstrap.css">
+  <link rel="stylesheet" href="styles/importer.css">
+    <!--STYLES-->
+    <!--STYLES END-->
+
+</head>
+
+<body >
+
+  <div class="container-fluid" ng-controller="hello">
+
+    <!-- navigation TOP -->
+     <div mynavbar>
+       navigation TOP
+     </div>
+
+
+     <!-- main window -->
+     <div class="row" >
+       <div class="col-md-1" style="background-color: indianred">LEFT navbar</div>
+       <div class="col-md-10" style="background-color: wheat">main working area</div>
+       <div class="col-md-1" style="background-color: indianred">RIGHT navbar</div>
+     </div>
+
+    <!-- FOOTER -->
+
+
+
+
+
+
+  </div>
+
+
+
+
+<!--SCRIPTS-->
+<!--SCRIPTS END-->
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+Installation
+------------
+1. install node
+2. install npm globally
+3. install sails (either). npm install sails
+4. install bower (npm install bower), create bower file (bower init), Start installing FRONT END components. Bower installs
+   its components in bower_components
+5. A
+
+
+Configuration
+-------------
+1. Set grunt to copy files from assets to .tmp (this happens only when sails is lifted)
+2. set grunt to copy files from bower_components to .tmp
+3. use the syntax <!--STYLES--><!--STYLES END--> in index.html <head></head>  to so that grunt can embed css fles in header
+4. use the syntax <!--SCRIPTS--><!--SCRIPTS END--> in index.html before </body>  to so that grunt can embed js fles in header
+5. check the sorting of your libraries in tasks/pipeline.js (change accordingly)
+6. create routes for rest apis (/api/v0.0.1/) in config/routes.js
+
+FROND-END
+---------
+angular libraries https://code.angularjs.org/1.4.3/
+angular docs https://docs.angularjs.org/api/
+angular famous modules http://ngmodules.org/
+
+angular, angular-touch, angular-resource, angular-ui-router, angular-...
+
+Remove the # from the URL (in app.js in config put $locationProvider.html5Mode(true);)
+
