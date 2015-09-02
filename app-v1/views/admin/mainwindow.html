@@ -1,1 +1,19 @@
-<div ui-view="detailinformation"></div>
+<div ng-controller="MainWindow">
+<h1>admin -> mainwindow.html </h1>
+
+<h2>Form control: radio buttons</h2>
+<p>The form below contains three radio buttons. The last option is disabled:</p>
+<form role="form">
+  <label><input type="checkbox" name="optradio" ng-model="loginStatus" ng-click="statusChanged($event)">{{loginStatus}}</label>
+    <!--<label><input type="checkbox" name="optradio" ng-model="loginStatus" ng-value="statusChanged($event)">{{loginStatus}}</label> -->
+</form>
+</div>
+
+<div ng-controller="ShowLogin" ng-model="loginStatus;theloginService">
+  I am {{loginText}}__{{theloginService.status}}.
+</div>
+
+<div ui-view="detailinformation" style="background-color: #0c8da0">
+  <h2>There is a ui-view in here (admin.users)</h2>
+  <p>Title: </p>
+</div>

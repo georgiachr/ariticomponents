@@ -36,6 +36,17 @@ module.exports = function(grunt) {
 		}
 	}
 
+  grunt.initConfig({
+    jsdoc : {
+      dist : {
+        src: ['app-v1/js/*.js', 'test/*.js'],
+        options: {
+          destination: 'docs'
+        }
+      }
+    }
+  });
+
 
 	/**
 	 * Loads Grunt configuration modules from the specified
@@ -78,4 +89,5 @@ module.exports = function(grunt) {
 	invokeConfigFn(taskConfigurations);
 	invokeConfigFn(registerDefinitions);
 
+  grunt.loadNpmTasks('grunt-jsdoc');
 };

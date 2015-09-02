@@ -11,7 +11,7 @@ myApp.controller('hello', ['$scope', function($scope) {
       templateUrl: 'views/topnavigation.html',
       //template: '<div>bye bye</div>',
       link: function(scope, element, attrs){
-        console.log("hello world");
+        console.log("hello topNavigation");
       }
     }
   });

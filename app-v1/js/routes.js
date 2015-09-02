@@ -11,7 +11,6 @@ myApp
 .config(function ($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('admin', {
-      url: '/admin/',
       views: {
         "mainwindow": {
           //controller: 'SideMenuViewVideosCtrl'
@@ -30,7 +29,7 @@ myApp
       views: {
         "detailinformation": {
           //controller: 'SideMenuViewVideosCtrl'
-          templateUrl: "views/admin/users.html",
+          templateUrl: "views/admin/users/mainwindow.html",
           parent: 'admin'
         }
       }
@@ -47,7 +46,7 @@ myApp
     }
   )
     .state('nurse', {
-      url: '/nurse/',
+      //url: '/nurse/',
       views: {
         "mainwindow": {
           //controller: 'SideMenuViewVideosCtrl'
@@ -63,7 +62,7 @@ myApp
     }
   )
     .state('sister', {
-      url: '/sister/',
+      //url: '/sister/',
       views: {
         "mainwindow": {
           templateUrl: "views/sister/mainwindow.html"
@@ -78,7 +77,7 @@ myApp
     }
   )
     .state('coordinator', {
-      url: '/coordinator/',
+      //url: '/coordinator/',
       views: {
         "mainwindow": {
           templateUrl: "views/coordinator/mainwindow.html"
