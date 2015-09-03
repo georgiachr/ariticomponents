@@ -34,7 +34,7 @@ module.exports = function(grunt) {
                         'angular/angular.js', 'angular-animate/angular-animate.js','angular-mocks/angular-mocks.js', 'angular-loader/angular-loader.js',
                         'angular-touch/angular-touch.js', 'angular-resource/angular-resource.js', 'angular-ui-router/release/angular-ui-router.js',
                         // add bootstrap & jquery js
-                        'bootstrap/dist/js/bootstrap.js','jquery/dist/jquery.js','angular-bootstrap/ui-bootstrap.js','angular-toastr/angular-toastr.js'
+                        'bootstrap/dist/js/bootstrap.js','jquery/dist/jquery.js','angular-bootstrap/ui-bootstrap.js','angular-toastr/angular-toastr.js', 'angular-bootstrap/ui-bootstrap-tpls.js'
                     ],
                     flatten: true,
                     dest: '.tmp/public/js/dependencies'
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
                         'bootstrap/dist/css/bootstrap.css',
                         'bootstrap/dist/css/bootstrap-theme.css',
                         'angular-toastr/angular-toastr.css',
-                        'angular-bootstrap/ui-bootstrap-csp.css'
+                        'angular-bootstrap/ui-bootstrap-csp.css',
 
                     ],
                     flatten: true,
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
                 expand: true,
                 cwd: './bower_components',
                 src: [
-                  'angular-bootstrap/ui-bootstrap-tpls.js'
+                  //'angular-bootstrap/ui-bootstrap-tpls.js'
                 ],
                 flatten: true,
                 dest: '.tmp/public/templates'

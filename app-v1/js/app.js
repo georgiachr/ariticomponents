@@ -6,7 +6,7 @@
   Main module declaration
   Declare a list of dependencies here (for example ui.router)
   * */
-var myApp = angular.module('ariti', ['ngAnimate','ui.router','ui.bootstrap.modal']);
+var myApp = angular.module('ariti', ['ngAnimate','ui.router','ui.bootstrap.modal','ui.bootstrap.tpls']);
 
 /* MODULES explanation */
 /*

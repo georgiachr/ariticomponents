@@ -1,8 +1,8 @@
 myApp
-  .controller('ModalCtrl',['$scope','$modalInstance', function($scope, $modalInstance){
+  .controller('SignupModalCtrl',['$scope','$modalInstance', function($scope, $modalInstance){
 
     //Debugging
-    console.log("ModalCtrl called");
+    console.log("SignupModalCtrl called");
 
     // Declarations
 
@@ -13,8 +13,6 @@ myApp
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
-
-
 
 
 

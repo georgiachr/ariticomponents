@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h3 class="modal-title">Add user</h3>
+  <h3 class="modal-title">Add a new user</h3>
 </div>
 
 
@@ -7,7 +7,9 @@
 
     <!-- SIGNUP FORM -->
     <form ng-submit="submitSignupForm()" id="sign-up-form" class="form-signin" name="signup">
-    <h2 class="form-signin-heading">Create an account</h2>
+    <!--
+      <h2 class="form-signin-heading">Create an account</h2>
+      -->
     <div class="row">
 
       <!-- N A M E -->
@@ -18,7 +20,7 @@
       <div class="control-group form-group col-md-12"
            ng-class="{'has-error':signup.name.$invalid &&
                                 signup.name.$dirty}"> <!-- dirty = user has already interacted with the form -->
-        <label>Your full name</label> <!-- form-group for optimum spacing -->
+        <label>Full name</label> <!-- form-group for optimum spacing -->
 
         <!-- For this input field make it required, and have a max length of 25 -->
         <input type="text" class="form-control" placeholder="e.g. Nikola Tesla" name="name" ng-model="signupForm.name" ng-maxlength="50" required>
@@ -31,25 +33,43 @@
             </span>
       </div>
 
-      <!-- T I T L E -->
+      <!-- J O B  P O S I T I O N -->
 
-      <div class="control-group form-group col-md-12"
+      <div class="control-group form-group col-md-6"
            ng-class="{'has-error':signup.title.$invalid &&
                                   signup.title.$dirty}">
-        <label>Your title</label>
-        <input type="text" class="form-control" placeholder="e.g. Genius" name="title" ng-model="signupForm.title" ng-maxlength="50" required>
+        <label>Job position</label>
+        <input type="text" class="form-control" placeholder="e.g. Nurse" name="title" ng-model="signupForm.title" ng-maxlength="50" required>
             <span class="help-block has-error" ng-if="signup.title.$dirty">
               <span ng-show="signup.title.$error.required">Title is required.</span>
               <span ng-show="signup.title.$error.maxlength">The name cannot be more than 50 characters.</span>
             </span>
       </div>
 
+      <!--
+      <div class="control-group form-group col-md-6">
+        <label>Select a value</label>
+        <div class="btn-group col-md-6" dropdown is-open="status.isopen">
+          <button  type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">
+            Button dropdown <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+            <li role="menuitem"><a href="#">Nurse</a></li>
+            <li role="menuitem"><a href="#">Doctor</a></li>
+            <li role="menuitem"><a href="#">Administrator</a></li>
+            <li class="divider"></li>
+            <li role="menuitem"><a href="#">Special Staff</a></li>
+          </ul>
+        </div>
+      </div>
+      -->
+
       <!-- E M A I L -->
 
       <div class="control-group form-group col-md-12"
            ng-class="{'has-error':signup.email.$invalid &&
                                 signup.email.$dirty}">
-        <label>Your email address</label>
+        <label>Email address</label>
         <input type="email" class="form-control" placeholder="nikola@tesla.com" name="email" ng-model="signupForm.email" required >
             <span class="help-block has-error" ng-if="signup.email.$dirty">
               <span ng-show="signup.email.$error.required">Email address is required.</span>
@@ -74,7 +94,7 @@
       <!-- C O N F I R M  P A S S W O R D -->
 
       <div class="control-group form-group col-md-6">
-        <label>Re-enter your password</label>
+        <label>Re-enter password</label>
         <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="signupForm.confirmPassword" required>
             <span class="help-block has-error" ng-if="signup.confirmation.$dirty">
               <span ng-show="signup.password.$error.compareTo">Password must match.</span>

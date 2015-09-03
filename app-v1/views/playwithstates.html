@@ -43,18 +43,20 @@
       </li>
 
       <li>
-        <!--
-        <a href="#"><span class="glyphicon glyphicon-user"></span> Signup</a>
-        -->
+        <a href="#" ng-click="open('lg')"><span class="glyphicon glyphicon-plus"></span> Add</a>
+      </li>
+      <!--
+      <li>
         <button type="button" class="btn btn-success" ng-click="open('lg')"><span class="glyphicon glyphicon-plus"></span> Add</button>
       </li>
+      -->
 
-      <!--data-toggle="modal"-->
 
       <!-- <a ng-controller="signinController" class="btn btn-default navbar-btn navbar-right" href="#" ng-if="!isAuthenticated">sign-in</a> -->
       <!-- Using ng-show instead of ng-if because we need this mark-up to be in the dom when signup controller
       fires.  If it's not there (which it wouldn't be in the case of ng-if) then the scope of the signup
       controller will not be tied to this element. -->
+
     </ul>
   </div>
 </nav>

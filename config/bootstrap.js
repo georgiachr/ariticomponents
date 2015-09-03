@@ -18,5 +18,14 @@ module.exports.bootstrap = function(cb) {
     sails.config.version = package.version;
     console.log(sails.config.version + " this is a version");
 
+/*
+    User.findOrCreate(
+      // Search for user with "admin" flag
+      {admin: true},
+      // Create one if no such user is found
+      {admin: true, name: 'Admin User',}
+  ).exec(cb);
+  */
+
     cb();
 };
