@@ -29,8 +29,6 @@ var jsFilesToInject = [
   'js/dependencies/bootstrap.js',
   'js/dependencies/angular.js',
 
-
-
   // Dependencies like jQuery, or Angular are brought in here
   'js/dependencies/**/*.js',
 

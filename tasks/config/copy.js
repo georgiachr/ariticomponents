@@ -48,7 +48,7 @@ module.exports = function(grunt) {
                         'bootstrap/dist/css/bootstrap.css',
                         'bootstrap/dist/css/bootstrap-theme.css',
                         'angular-toastr/angular-toastr.css',
-                        'angular-bootstrap/ui-bootstrap-csp.css',
+                        'angular-bootstrap/ui-bootstrap-csp.css'
 
                     ],
                     flatten: true,

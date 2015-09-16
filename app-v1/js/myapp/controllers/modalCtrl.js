@@ -1,8 +1,8 @@
 myApp
-  .controller('SignupModalCtrl',['$scope','$modalInstance', function($scope, $modalInstance){
+  .controller('ModalCtrl',['$scope','$modalInstance', function($scope, $modalInstance){
 
     //Debugging
-    console.log("SignupModalCtrl called");
+    console.log("ModalCtrl called");
 
     // Declarations
 

@@ -6,7 +6,7 @@
 <div class="modal-body">
 
     <!-- SIGNUP FORM -->
-    <form ng-submit="submitSignupForm()" id="sign-up-form" class="form-signin" name="signup">
+    <form ng-submit="submitSignupForm()" id="sign-up-form" class="form-signin" name="signup" ng-controller="SignupFormCtrl">
     <!--
       <h2 class="form-signin-heading">Create an account</h2>
       -->
@@ -79,7 +79,7 @@
 
       <!-- P A S S W O R D -->
 
-      <div class="control-group form-group col-md-6"
+      <div class="control-group form-group col-md-12"
            ng-class="{'has-error':signup.password.$invalid &&
                                 signup.password.$dirty}">
         <label>Choose a password</label>
@@ -93,7 +93,7 @@
 
       <!-- C O N F I R M  P A S S W O R D -->
 
-      <div class="control-group form-group col-md-6">
+      <div class="control-group form-group col-md-12">
         <label>Re-enter password</label>
         <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="signupForm.confirmPassword" required>
             <span class="help-block has-error" ng-if="signup.confirmation.$dirty">
@@ -112,7 +112,10 @@
       <span ng-show="signupForm.loading">Preparing your new account...</span>
     </button>
 
-    <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+      <!-- Cross-Site Request Forgery during authentication-->
+
+
+
     </form>
 
 </div>

@@ -1,0 +1,46 @@
+<div class="modal-header">
+  <h3 class="modal-title">Sign in</h3>
+</div>
+
+
+<div class="modal-body">
+
+  <!-- LOGIN FORM -->
+  <form ng-submit="submitLoginForm()" class="form-signin" name="signin" ng-controller="SigninFormCtrl">
+
+      <div class="row">
+
+        <!-- E M A I L -->
+        <div class="form-group control-group form-group col-md-12">
+          <label>Enter your Email</label>
+          <input ng-model="loginForm.email" type="text" placeholder="Email" name="email" class="form-control">
+        </div>
+
+        <!-- P A S S W O R D -->
+        <div class="form-group control-group form-group col-md-12">
+          <label>Enter your password</label>
+          <input ng-model="loginForm.password" type="password" placeholder="Password" name="password" class="form-control">
+        </div>
+
+      </div>
+
+    <br/>
+
+      <!-- S U B M I T -->
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        <span ng-show="!loginForm.loading">Sign in</span>
+        <span ng-show="loginForm.loading" class="fa fa-spinner"></span>
+        <span ng-show="loginForm.loading">Signing up...</span>
+      </button>
+
+      <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+
+
+
+  </form>
+
+</div>
+
+<div class="modal-footer">
+
+</div>
