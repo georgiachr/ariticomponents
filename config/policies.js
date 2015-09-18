@@ -50,11 +50,14 @@ module.exports.policies = {
 	// }
 
 
- /* '*': ['isAuthorized'], // Everything resctricted here
-  'UserController': {
-    'create': true // We dont need authorization here, allowing public access
-  },
+  '*': ['isTokenAuthorized'], // Everything resctricted here
 
+  'UserController': {
+    'login': true, // We dont need authorization here, allowing public access
+    'logout': true
+  }
+
+  /*
   'SessionController': {
     '*': true // We dont need authorization here, allowing public access
   }*/

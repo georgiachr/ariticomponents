@@ -5,19 +5,60 @@
 myApp
   .controller('SigninFormCtrl',['$scope', '$http','$timeout','useridentity', function($scope, $http, $timeout, useridentity){
 
-    /* D E C L A R A T I O N S */
+    /* ================================= DEBUGGING ================================= */
+
+    console.log("NavigationBarUserActionsCtrl called");
+
+
+    /* ================================= DECLARATIONS ================================= */
 
     /**
      * instance of userAuthService
      * use with watch (other controllers)
      */
-   $scope.userAuthServiceInstance = useridentity;
-
-
+    $scope.userAuthServiceInstance = useridentity;
 
     $scope.loginForm = {};
 
-    /* F U N C T I O N S */
+    $scope.userName = null ;
+
+    $scope.loggedUserOptionsButton = {
+      status: true
+    }
+
+
+
+    /* ================================= FUNCTIONS ================================= */
+
+    /**
+     * Press the LOGOUT button
+     *
+     */
+    $scope.pressLogoutButton = function () {
+
+      console.log("inside pressLogoutButton");
+
+      /**
+       * Logout request to Sails
+       */
+      $http.get('/logout')
+        .then(function onSuccess(responseData) {
+          console.log("SIGN-OUT onSuccess state");
+          $scope.userAuthServiceInstance.logoutUser();
+
+        })
+        .catch(function onError(sailsResponse) {
+          // called asynchronously if an error occurs
+          // or server returns response with an error status.
+
+          console.log("SIGN-OUT onError state");
+          $scope.userAuthServiceInstance.logoutUser();
+        })
+        .finally(function eitherWay() {
+          console.log("SIGN-IN finally state");
+        });
+
+    }
 
     /**
      * Submits the LOGIN form
@@ -56,29 +97,10 @@ myApp
           console.log("SIGN-IN onSuccess state");
 
           var data = angular.fromJson(responseData)['data'];
-          var config = angular.fromJson(responseData)['config'];
-
-          /*TODO: create a userAuthServiceInstance method to set all these together*/
-          //$scope.userAuthServiceInstance.setUser(data);
-          $scope.userAuthServiceInstance.setToken(data['token']);
-          $scope.userAuthServiceInstance.setRole(data['role']);
-          $scope.userAuthServiceInstance.setHeader();
-          $scope.userAuthServiceInstance.setUserStatus();
-
-          /*Just to check if headers are now correct (use the token)*/
-          $http.get('/').
-            then(function(response) {
-              // this callback will be called asynchronously
-              // when the response is available
-            }, function(response) {
-              // called asynchronously if an error occurs
-              // or server returns response with an error status.
-            });
-
-          /*watchandreact = function(isLoggedIn){
-            isLoggedIn ? $scope.loginText = "logged in": $scope.loginText = "log out";
-          }*/
-
+          //var config = angular.fromJson(responseData)['config'];
+          //console.log("data = " + JSON.stringify(data));
+          //console.log("data = " + data.user['name']);
+          $scope.userAuthServiceInstance.loginUser(data);
 
 
           /*
@@ -120,7 +142,52 @@ myApp
           $scope.loginForm.loading = false;
         });
 
-};
+    };
+
+    /**
+     * Reset username and password fields
+     */
+    $scope.resetLoginForm = function (){
+      $scope.loginForm.password = "";
+      $scope.loginForm.email = "";
+    };
+
+    $scope.loggedUserOptionsButton.status = true;
+
+    $scope.items = [
+      'The first choice!',
+      'And another choice for you.',
+      'but wait! A third!'
+    ];
+
+
+    $scope.toggled = function(open) {
+     console.log('Dropdown is now: ', open);
+    };
+
+    $scope.toggleDropdown = function() {
+
+      $scope.loggedUserOptionsButton.status = !$scope.loggedUserOptionsButton.status;
+    };
+
+    /* ================================= WATCHES ================================= */
+    /**
+     * Watch is a user is already logged in using our 'useridentity' Service
+     * If a user is logged in navHasLoginButton does not appear.
+     */
+    $scope.$watch('userAuthServiceInstance.userStatus',
+      function(){
+        if($scope.userAuthServiceInstance.userStatus) {
+          $scope.userName = $scope.userAuthServiceInstance.userName;
+
+        }
+        else {
+
+          $scope.resetLoginForm();
+        }
+      },
+      true);
+
 
   }]);
 

@@ -17,19 +17,33 @@ myApp
       userToken: null, userID:null,
       userRole: null,
       userConfigHeaders: null,
+      userName: null,
 
-      user:{
-        token: null,
-        role: null,
-        status: false,
-        id: null
+      setUser: function setUser(data){
+        this.userName = data.user['name'];
+        this.userToken = data['token']; /* user's token */
+        this.userRole = data.user['title']; /* */
+        this.userID = data['id'];
+
       },
 
-      setUser: function setUser(){
-        this.user.status = true;
-        this.user.token = token;
-        this.user.role = role;
-        this.user.id = id;
+      loginUser: function loginUser(data){
+        this.userStatus = true; /* there is a logged in user */
+        this.setUser(data);
+        this.setHeader();
+      },
+
+      logoutUser: function logoutUser(){
+        this.userStatus = false;
+        this.reset();
+      },
+
+      reset: function reset(){
+        this.userToken = null,
+        this.userID = null,
+        this.userName = null;
+        this.userRole = null,
+        this.userConfigHeaders = null
       },
 
       isLogin: function isLogin() {
@@ -40,22 +54,7 @@ myApp
         console.log('setLogin');
         this.status = true;
       },
-      setLogout: function setLogout() {
-        console.log('isLogout');
-        this.status = false;
-      },
-      setToken: function setToken(token){
-        console.log('userAuthService - setToken');
-        this.userToken = token;
-      },
-      setID: function setID(id){
-        console.log('userAuthService - setID');
-        this.userID = id;
-      },
-      setRole: function setRole(role){
-        console.log('userAuthService - setRole');
-        this.userRole = role;
-      },
+
       setHeader: function setHeaders(){
         console.log('userAuthService - setHeader');
         //this.userConfigHeaders = config;
@@ -81,3 +80,23 @@ myApp
     }
 
   }]);
+
+
+/*
+ setLogout: function setLogout() {
+ console.log('isLogout');
+ this.status = false;
+ },
+ setToken: function setToken(token){
+ console.log('userAuthService - setToken');
+ this.userToken = token;
+ },
+ setID: function setID(id){
+ console.log('userAuthService - setID');
+ this.userID = id;
+ },
+ setRole: function setRole(role){
+ console.log('userAuthService - setRole');
+ this.userRole = role;
+ },
+ */

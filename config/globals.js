@@ -60,4 +60,19 @@ module.exports.globals = {
   ****************************************************************************/
 
 	// models: true
+
+  /**
+   * used to encrypt the token
+   */
+  tokensalt: "secretissecet",
+
+  /**
+   * Sets the expiration time in minutes
+   */
+  tokenExpirationInMinutes: 240,
+
+  /**
+   * Sets the near time expiration in minutes
+   */
+  tokenNearTimeExpirationInMinutes: 10
 };

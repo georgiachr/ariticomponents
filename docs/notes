@@ -27,3 +27,8 @@ angular, angular-touch, angular-resource, angular-ui-router, angular-...
 
 Remove the # from the URL (in app.js in config put $locationProvider.html5Mode(true);)
 
+
+- Do not use CSRF
+- Blueprints: rest = true
+- In config directory put a file with module.exports.[name] and then the [name] could be accessed from anywhere in our applications
+

@@ -8,16 +8,17 @@
     <span class="icon-bar"></span>
   </button>
   <!-- This is the brand on the left-hand side. -->
+  <!--
   <a class="navbar-brand" href="/#/"> georgiatest</a>
+  -->
   <!-- This is what is the above collapse button points to when the mark-up below is collapsed -->
   <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
     <!-- This is what "styles" the li's as navbar items -->
-    <ul class="nav navbar-nav navbar-right">
-      <!-- navbar-right pulls this element right -->
-      <!-- Using ng-show instead of ng-if because we need this mark-up to be in the dom when signup controller
-      fires.  If it's not there (which it wouldn't be in the case of ng-if) then the scope of the signup
-      controller will not be tied to this element. -->
 
+    <!--
+    LEFT navbar area:
+    -->
+    <ul class="nav navbar-nav navbar-left">
       <li>
         <a ui-sref="admin">Admin</a>
       </li>
@@ -37,19 +38,75 @@
       <li>
         <a ui-sref="coordinator">Coordinator</a>
       </li>
+    </ul>
 
+
+
+      <!-- navbar-right pulls this element right -->
+      <!-- Using ng-show instead of ng-if because we need this mark-up to be in the dom when signup controller
+      fires.  If it's not there (which it wouldn't be in the case of ng-if) then the scope of the signup
+      controller will not be tied to this element. -->
+      <!--
       <li>
         <a href="#" ng-click="open('lg')"><span class="glyphicon glyphicon-user"></span>{{loginText}}</a>
       </li>
-
+      -->
+      <!--
       <li>
         <a href="#" ng-click="open('lg',true)"><span class="glyphicon glyphicon-plus"></span> Add</a>
       </li>
-      <!--
-      <li>
-        <button type="button" class="btn btn-success" ng-click="open('lg')"><span class="glyphicon glyphicon-plus"></span> Add</button>
-      </li>
       -->
+
+    <!--
+    RIGHT navbar area: Login, Add etc
+    -->
+    <div ng-controller="SigninFormCtrl">
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-show="navHasLoginButton" >
+          <form ng-submit="submitLoginForm()" class="navbar-form navbar-right">
+
+            <div class="form-group">
+              <input ng-model="loginForm.email" type="text" placeholder="Email" name="email" class="form-control">
+            </div>
+
+
+            <div class="form-group">
+              <input ng-model="loginForm.password" type="password" placeholder="Password" name="password" class="form-control">
+            </div>
+
+
+            <button type="submit" class="btn btn-success">
+              <span ng-show="!loginForm.loading">Sign in</span>
+              <span ng-show="loginForm.loading" class="fa fa-spinner"></span>
+              <span ng-show="loginForm.loading">Signing up...</span>
+            </button>
+
+          </form>
+
+        </li>
+
+        <li ng-hide="navHasLoginButton">
+          <a href="#" ng-click="pressLogoutButton()"><span class="glyphicon glyphicon-user"></span> Logout</a>
+          <a href="#" ><span class="glyphicon glyphicon-user"></span> My Profile</a>
+          <div is-open="loggedUserOptionsButton.status" class="navbar-form navbar-right btn-group" dropdown >
+            <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle >
+              {{userName}} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="simple-btn-keyboard-nav">
+              <li role="menuitem"><a href="#">My Profile</a></li>
+              <li class="divider"></li>
+              <li role="menuitem"><a href="#" ng-click="pressLogoutButton()")>Logout</a></li>
+            </ul>
+          </div>
+
+
+        </li>
+
+      </ul>
+
+
+    </div>
+
 
 
       <!-- <a ng-controller="signinController" class="btn btn-default navbar-btn navbar-right" href="#" ng-if="!isAuthenticated">sign-in</a> -->

@@ -438,7 +438,7 @@ module.exports = {
           },
 
           success: function (){
-            console.log(JSON.stringify(user));
+            //console.log(JSON.stringify(user));
             // The user is "logging in" (e.g. establishing a session)
             // so update the `lastLoggedIn` attribute.
             User.update(user.id, {lastLoggedIn: (new Date()).toString()},
@@ -452,7 +452,7 @@ module.exports = {
               //return res.ok();
             });
 
-            User.update(user.id, {token: jwtToken.issueToken(user.id)},
+            User.update(user.id, {token: jwtToken.issueToken({userid: user.id})},
               function(err) {
                 if (err) return res.negotiate(err);
 
@@ -460,7 +460,7 @@ module.exports = {
                 //req.session.me = user.id;
 
                 // All done- let the client know that everything worked.
-                console.log(JSON.stringify(user));
+                //console.log(JSON.stringify(user));
                 //return res.ok();
 
                 // res.json([statusCode, ... ] data);
@@ -480,30 +480,60 @@ module.exports = {
    */
   logout: function (req, res) {
 
-    // Look up the user record from the database which is
-    // referenced by the id in the user session (req.session.me)
-    User.findOne(req.session.me, function foundUser(err, user) {
-      if (err) return res.negotiate(err);
+    var header_token = null;
 
-      // If session refers to a user who no longer exists, still allow logout.
-      if (!user) {
-        sails.log.verbose('Session refers to a user who no longer exists.');
-        return res.backToHomePage();
+
+    if (req.headers) {
+
+      /*
+       var parts = req.headers.authorization.split(' ');
+       if (parts.length == 2) {
+       var scheme = parts[0],
+       credentials = parts[1];
+       */
+
+
+      header_token = req.headers["x-auth-token"];
+
+      if (header_token === undefined) {
+        console.log("token undefined");
+        return res.json(401, {err: 'No Authorization header was found'});
       }
 
-      // Wipe out the session (log out)
-      req.session.me = null;
-      console.log("logging out");
-      // Inform anyone who's allowed to hear about it that this user has logged out.
-      User.publishUpdate(user.id, {
-        justLoggedOut: true,
-        name: user.name
+
+      // check token is valid
+      jwtToken.verifyToken(header_token,function(err, token) {
+        if (err)
+          return res.json(401, {err: 'The token is not valid'});
+
+        decoded = jwtToken.decodeToken(header_token,{complete:true});
+        console.log(JSON.stringify(decoded));
+        userid = decoded.payload.userid;
+
+        User.findOne({
+          id: userid
+        },function foundUser(err, user){
+          if (err) {console.log("negotiate error");return res.negotiate(err)};
+          if (!user) {console.log("not user");return res.notFound();}
+
+
+          User.update(user.id, {token: ""},
+            function(err) {
+              if (err) return res.negotiate(err);
+
+              // Store user id in the user session
+              //req.session.me = user.id;
+
+              // All done- let the client know that everything worked.
+              //console.log(JSON.stringify(user));
+              //return res.ok();
+
+              // res.json([statusCode, ... ] data);
+              res.json(200);
+            });
+        });
       });
-
-      // Either send a 200 OK or redirect to the home page
-      return res.backToHomePage();
-
-    });
+    };
   },
 
 

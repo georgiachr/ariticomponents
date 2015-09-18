@@ -16,35 +16,67 @@
  */
 module.exports = function (req, res, next) {
 
-  var token;
+  var header_token;
 
-  if (req.headers && req.headers.authorization) {
 
-    var parts = req.headers.authorization.split(' ');
-    if (parts.length == 2) {
-      var scheme = parts[0],
-        credentials = parts[1];
+  if (req.headers) {
 
-      if (/^Bearer$/i.test(scheme)) {
-        token = credentials;
-      }
-    } else {
-      return res.json(401, {err: 'Format is Authorization: Bearer [token]'});
+    /*
+     var parts = req.headers.authorization.split(' ');
+     if (parts.length == 2) {
+     var scheme = parts[0],
+     credentials = parts[1];
+     */
+
+
+    header_token = req.headers["x-auth-token"];
+
+    if (header_token === undefined) {
+      console.log("token undefined");
+      return res.json(401, {err: 'No Authorization header was found'});
     }
-  } else if (req.param('token')) {
-    token = req.param('token');
-    // We delete the token from param to not mess with blueprints
-    delete req.query.token;
-  } else {
-    return res.json(401, {err: 'No Authorization header was found'});
-  }
 
-  sailsTokenAuth.verifyToken(token, function(err, token) {
-    if (err) return res.json(401, {err: 'The token is not valid'});
 
-    req.token = token;
+    // check token is valid
+    jwtToken.verifyToken(header_token,function(err, token) {
+      if (err)
+        return res.json(401, {err: 'The token is not valid'});
 
-    next();
-  });
+      decoded = jwtToken.decodeToken(header_token,{complete:true});
+      console.log(JSON.stringify(decoded));
+      userid = decoded.payload.userid;
 
+      User.findOne({
+        id: userid
+      },function foundUser(err, user){
+        if (err) {console.log("negotiate error");return res.negotiate(err)};
+        if (!user) {console.log("not user");return res.notFound();}
+
+        /**
+         * check if the token is near expiration
+         */
+        if ( jwtToken.tokenExpiresInMinutes(header_token) < sails.config.globals.tokenNearTimeExpirationInMinutes){
+
+          newtoken = jwtToken.issueToken(decoded.payload);
+          User.update(user.id, {token: newtoken},
+            function(err) {
+              if (err) return res.negotiate(err);
+
+              // Store user id in the user session
+              //req.session.me = user.id;
+
+              // All done- let the client know that everything worked.
+              //console.log(JSON.stringify(user));
+              //return res.ok();
+
+              // res.json([statusCode, ... ] data);
+              res.headers['x-auth-token'] = newtoken;
+            });
+
+        }
+
+      });
+      next();
+    });
+  };
 };
