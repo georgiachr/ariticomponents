@@ -1,1 +1,38 @@
-<h1>admin -> navleft.html </h1>
+<!--
+Navleft panel for Administrator:
+Administrator's actions (add, show etc) are represented as directives (see below)
+All directives are hidden by default.
+When Admin selects an action this action triggers ng-show attribute of the appropriate directive
+This is connected with service
+-->
+
+<div ng-controller="AdminNavLeftWindowCtrl">
+
+  <div ng-show="mainAdminActions.users" > <!-- This is for action 'Users' -->
+
+    <li>
+      <a href="#" ng-click="selectSecondaryAction('list')"><span class="glyphicon glyphicon-th-list"></span> List</a>
+    </li>
+    <li>
+      <a href="#" ng-click="selectSecondaryAction('add')"><span class="glyphicon glyphicon-plus"></span> Add</a>
+    </li>
+
+  </div>
+
+
+  <div ng-show="mainAdminActions.statistics"> <!-- This is for action 'Statistics' -->
+    <li>
+      <a href="#" ><span class="glyphicon glyphicon-plus"></span> Data</a>
+    </li>
+    <li>
+      <a href="#" ><span class="glyphicon glyphicon-plus"></span> Users</a>
+    </li>
+    <li>
+      <a href="#" ><span class="glyphicon glyphicon-plus"></span> CPU</a>
+    </li>
+    <li>
+      <a href="#" ><span class="glyphicon glyphicon-plus"></span> Memory</a>
+    </li>
+  </div>
+
+</div>

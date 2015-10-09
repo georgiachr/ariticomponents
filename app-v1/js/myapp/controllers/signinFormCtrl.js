@@ -3,11 +3,11 @@
  */
 
 myApp
-  .controller('SigninFormCtrl',['$scope', '$http','$timeout','useridentity', function($scope, $http, $timeout, useridentity){
+  .controller('SigninFormCtrl',['$scope', '$http','$timeout','useridentity', 'toastr',  function($scope, $http, $timeout, useridentity, toastr){
 
     /* ================================= DEBUGGING ================================= */
 
-    console.log("NavigationBarUserActionsCtrl called");
+    console.log("Controller SigninFormCtrl called!");
 
 
     /* ================================= DECLARATIONS ================================= */
@@ -39,26 +39,33 @@ myApp
       console.log("inside pressLogoutButton");
 
       /**
-       * Logout request to Sails
+       * LOGOUT request to Sails
        */
       $http.get('/logout')
         .then(function onSuccess(responseData) {
-          console.log("SIGN-OUT onSuccess state");
+
+          /**
+           *  Reset useridentity service
+           *  There is no user data in this service
+           */
           $scope.userAuthServiceInstance.logoutUser();
 
         })
         .catch(function onError(sailsResponse) {
+
           // called asynchronously if an error occurs
           // or server returns response with an error status.
 
-          console.log("SIGN-OUT onError state");
+          /**
+           *  Reset useridentity service
+           *  There is no user data in this service
+           */
           $scope.userAuthServiceInstance.logoutUser();
         })
         .finally(function eitherWay() {
-          console.log("SIGN-IN finally state");
         });
 
-    }
+    };
 
     /**
      * Submits the LOGIN form
@@ -112,33 +119,39 @@ myApp
           $scope.$emit('loginSuccess');
 
         })
+      /**
+       * Handle known error types.
+       */
         .catch(function onError(sailsResponse) {
 
           $scope.state = "req_error";
+          //console.log("SIGN-IN onError state"+sailsResponse.toString());
 
-          console.log("SIGN-IN onError state"+sailsResponse.toString());
-          // Handle known error type(s).
-          // Invalid username / password combination.
+
+          /**
+           * 1. Invalid username / password combination.
+           */
           if (sailsResponse.status === 400 || 404) {
-            // $scope.loginForm.topLevelErrorMessage = 'Invalid email/password combination.';
-
-            console.log("Invalid email/password combination.");
-            /*toastr.error('Invalid email/password combination.', 'Error', {
-             closeButton: true
-             });*/
+            toastr.error('Invalid email/password combination.', 'Error');
+            return;
+          }
+          /**
+           * 2. Server Error (500)
+           */
+          else if (sailsResponse.status === 500) {
+            toastr.error('Unexpected error, please try again later.', 'Error');
+            return;
+          }
+          /**
+           * 2. Server Error (500)
+           */
+          else {
+            toastr.error('Something BAD happened:'+sailsResponse.toString(), 'Error');
             return;
           }
 
-          console.log("An unexpected error occurred, please try again.");
-          /*toastr.error('An unexpected error occurred, please try again.', 'Error', {
-           closeButton: true
-           });*/
-
-          return;
-
         })
         .finally(function eitherWay(){
-          console.log("SIGN-IN finally state");
           $scope.loginForm.loading = false;
         });
 
@@ -152,23 +165,7 @@ myApp
       $scope.loginForm.email = "";
     };
 
-    $scope.loggedUserOptionsButton.status = true;
 
-    $scope.items = [
-      'The first choice!',
-      'And another choice for you.',
-      'but wait! A third!'
-    ];
-
-
-    $scope.toggled = function(open) {
-     console.log('Dropdown is now: ', open);
-    };
-
-    $scope.toggleDropdown = function() {
-
-      $scope.loggedUserOptionsButton.status = !$scope.loggedUserOptionsButton.status;
-    };
 
     /* ================================= WATCHES ================================= */
     /**

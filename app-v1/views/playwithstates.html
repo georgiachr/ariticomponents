@@ -7,10 +7,12 @@
     <span class="icon-bar"></span>
     <span class="icon-bar"></span>
   </button>
+
   <!-- This is the brand on the left-hand side. -->
   <!--
-  <a class="navbar-brand" href="/#/"> georgiatest</a>
+  <a class="navbar-brand" ui-sref="/#/"> georgiatest</a>
   -->
+
   <!-- This is what is the above collapse button points to when the mark-up below is collapsed -->
   <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
     <!-- This is what "styles" the li's as navbar items -->
@@ -18,28 +20,7 @@
     <!--
     LEFT navbar area:
     -->
-    <ul class="nav navbar-nav navbar-left">
-      <li>
-        <a ui-sref="admin">Admin</a>
-      </li>
-
-      <li>
-        <a ui-sref="nurse">Nurse</a>
-      </li>
-
-      <li>
-        <a ui-sref="admin.users">Admin.users</a>
-      </li>
-
-      <li>
-        <a ui-sref="admin.nurses">Admin.nurse</a>
-      </li>
-
-      <li>
-        <a ui-sref="coordinator">Coordinator</a>
-      </li>
-    </ul>
-
+    <div ui-view="topleftnavigation"></div>
 
 
       <!-- navbar-right pulls this element right -->
@@ -58,7 +39,7 @@
       -->
 
     <!--
-    RIGHT navbar area: Login, Add etc
+    RIGHT navbar area: Login, etc
     -->
     <div ng-controller="SigninFormCtrl">
       <ul class="nav navbar-nav navbar-right">
@@ -86,8 +67,10 @@
         </li>
 
         <li ng-hide="navHasLoginButton">
+          <!--
           <a href="#" ng-click="pressLogoutButton()"><span class="glyphicon glyphicon-user"></span> Logout</a>
           <a href="#" ><span class="glyphicon glyphicon-user"></span> My Profile</a>
+          -->
           <div is-open="loggedUserOptionsButton.status" class="navbar-form navbar-right btn-group" dropdown >
             <button id="single-button" type="button" class="btn btn-primary" dropdown-toggle >
               {{userName}} <span class="caret"></span>

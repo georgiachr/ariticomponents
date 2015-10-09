@@ -1,14 +1,17 @@
+/**
+ * Administrators MainWindow view's Controller
+ */
 myApp
-  .controller('MainWindow',['$scope','loginService', 'myProfileService', function($scope, loginService, myProfileService){
+  .controller('MainWindow',['$scope', function($scope){
 
     // Declarations
-    $scope.loginStatus = loginService.isLogin();
+    //$scope.loginStatus = loginService.isLogin();
 
     /**
      *
      * @param $event
      */
-    $scope.statusChanged = function($event) {
+    /*$scope.statusChanged = function($event) {
       var checkmode = $event.target;
       if (checkmode.checked) {
       //if ($scope.loginStatus)
@@ -19,6 +22,6 @@ myApp
         loginService.setLogout();
         myProfileService.setName("Giorgos");
       }
-    };
+    };*/
 }]);
 

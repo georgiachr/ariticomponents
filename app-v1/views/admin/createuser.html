@@ -1,0 +1,144 @@
+<div class="jumbotron">
+  <h2>Create a new user!</h2>
+
+  <form class="form-horizontal">
+    <fieldset>
+
+      <div class="row-fluid">
+
+        <div class="col-md-8">
+
+          <!-- Form Name -->
+          <legend>Personal Information:</legend>
+
+          <!-- Name input-->
+          <div class="form-group">
+            <label class="col-md-2 col-lg-2 control-label" for="name">Name</label>
+            <div class="col-md-8 col-lg-8">
+              <input id="name" name="name" type="text" placeholder="Nikola" class="form-control input-md" required="">
+            </div>
+          </div>
+
+          <!-- Surname input-->
+          <div class="form-group">
+            <label class="col-md-2 col-lg-2 control-label" for="email">Surname</label>
+            <div class="col-md-8 col-lg-8">
+              <input id="surname" name="surname" type="text" placeholder="Tesla" class="form-control input-md" required="">
+            </div>
+          </div>
+
+          <!-- Email input-->
+          <div class="form-group ">
+            <label class="col-md-2 col-lg-2 control-label" for="email">Email</label>
+            <div class="col-md-8 col-lg-8">
+              <input id="email" name="email" type="text" placeholder="nikola@tesla" class="form-control input-md" required="">
+            </div>
+          </div>
+
+          <!-- Password input-->
+          <div class="form-group ">
+            <label class="col-md-2 col-lg-2 control-label" for="password">Password</label>
+            <div class="col-md-8 col-lg-8">
+              <input id="password" name="password" type="password" placeholder="password" class="form-control input-md" required="">
+            </div>
+          </div>
+
+          <!-- Password input-->
+          <div class="form-group ">
+            <label class="col-md-2 col-lg-2 control-label" for="confpassword">Retype password</label>
+            <div class="col-md-8 col-lg-8">
+              <input id="confpassword" name="confpassword" type="password" placeholder="password" class="form-control input-md" required="">
+
+            </div>
+          </div>
+
+        </div> <!-- col-md-8 -->
+
+        <div class="col-md-4">
+
+          <legend>User Profile Picture:</legend>
+
+          <img src="images/user-avatar.jpg" class="img-responsive" alt="Rounded Image" style="display: block; margin-left: auto; margin-right: auto">
+
+          <br>
+
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="filebutton">Upload Avatar:</label>
+            <div class="col-md-4">
+              <input id="filebutton" name="filebutton" class="input-file" type="file">
+            </div>
+          </div>
+
+        </div> <!-- col-md-4 -->
+
+      </div> <!-- row-fluid -->
+
+      <div class="row-fluid"></div>
+
+      <div class="row-fluid">
+
+        <div class="col-md-8">
+
+          <legend>Job details:</legend>
+
+          <!-- Button Drop Down -->
+          <div class="form-group">
+            <label class="col-md-2 col-lg-2 control-label" for="buttondropdown">Position</label>
+            <div class="col-md-8 col-lg-8">
+              <div class="input-group">
+                <input id="buttondropdown" name="buttondropdown" class="form-control" placeholder="Administrator" type="text" required="">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Select
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu pull-right">
+                    <li><a href="#">Administrator</a></li>
+                    <li><a href="#">Doctor</a></li>
+                    <li><a href="#">Nurse</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Comments -->
+          <div class="form-group">
+            <label class="col-md-2 col-lg-2 control-label" for="comments">Comments</label>
+            <div class="col-md-8 col-lg-8 ">
+              <textarea class="form-control" id="comments" name="comments"></textarea>
+            </div>
+          </div>
+
+        </div> <!-- col-md-8 -->
+
+      </div> <!-- row-fluid -->
+
+
+      <div class="row-fluid"></div>
+
+      <div class="row-fluid">
+
+        <div class="col-md-2 col-md-offset-10">
+
+
+
+          <!-- Button (Double) -->
+          <div class="form-group">
+
+            <div >
+              <button id="submit" name="submit" class="btn btn-success">Save</button>
+              <button id="discard" name="discard" class="btn btn-danger">Discard</button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </fieldset>
+  </form>
+
+</div>

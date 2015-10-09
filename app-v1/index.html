@@ -58,59 +58,47 @@
 
 <body >
 
-     <!-- navigation TOP
-
-    Just to play around with states
-    Need to be removed in deployment
-    -->
-
-     <div playwithstates ng-controller="NavigationBarUserActionsCtrl">
-       navigation TOP
-     </div>
-
-       <div class="container-fluid" >
 
 
-         <div class="row-fluid" style="height:100%;">
+<div class="wrapper">
 
-           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2" style="background-color: #70787d;">
-             <h2>Left column</h2>
-             <p>Add here anything that belongs to the left column (left sidebar).</p>
-             <div ui-view="navleft"></div>
-           </div>
+  <div class="header">
+    <div playwithstates ng-controller="NavigationBarUserActionsCtrl">
 
-           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-8" style="background-color: #d3d3d3">
-             <h2>Main area</h2>
-             <p>Main content here.</p>
-             <div ui-view="mainwindow"></div>
-           </div>
-
-           <!--
-           <div class="clearfix visible-sm-block"></div>
-            -->
-
-           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2" style="background-color: #70787d">
-             <h2>Right column</h2>
-             <p>Add here anything that belongs to the right column (right sidebar).</p>
-             <div ui-view="navright"></div>
-           </div>
-
-
-         </div>
-
-         <hr>
-
-         <div class="row-fluid">
-           <div class="col-xs-12 col-sm-12" style="background-color: #016d92">
-             <footer>
-               <p>the footer area</p>
-             </footer>
-           </div>
-         </div>
-       </div>
-
-
+    </div>
   </div>
+
+  <div class="main">
+    <div class="box sidebar">
+      <div class="menu">
+        <div ui-view="navleft">
+         <!-- navleft changes according to user role as a state -->
+        </div>
+      </div>
+    </div>
+
+    <div class="box content">
+      <div ui-view="mainwindow">
+        <!-- mainwindow changes according to user role as a state -->
+      </div>
+    </div>
+
+    <div class="box sidebar">
+      <div ui-view="navright">
+        <!-- navright changes according to user role as a state -->
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="footer" style="background-color: #000000;">
+    <footer> <!-- footer is the same to everyone -->
+      <p>ariticomponents @ 2015</p>
+    </footer>
+  </div>
+
+</div>
 
 
 

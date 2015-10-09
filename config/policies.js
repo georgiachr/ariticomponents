@@ -54,7 +54,10 @@ module.exports.policies = {
 
   'UserController': {
     'login': true, // We dont need authorization here, allowing public access
-    'logout': true
+    'logout': true,
+    'addUser': ['isAdmin'],
+    'userList': ['isAdmin']
+
   }
 
   /*

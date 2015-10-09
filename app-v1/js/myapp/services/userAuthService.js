@@ -21,9 +21,9 @@ myApp
 
       setUser: function setUser(data){
         this.userName = data.user['name'];
-        this.userToken = data['token']; /* user's token */
+        this.userToken = data.user['token']; /* user's token */
         this.userRole = data.user['title']; /* */
-        this.userID = data['id'];
+        this.userID = data.user['id'];
 
       },
 
@@ -47,23 +47,22 @@ myApp
       },
 
       isLogin: function isLogin() {
-        console.log('isLogin');
+        //console.log('isLogin');
         return this.status;
       },
       setLogin: function setLogin() {
-        console.log('setLogin');
+        //console.log('setLogin');
         this.status = true;
       },
 
       setHeader: function setHeaders(){
-        console.log('userAuthService - setHeader');
-        //this.userConfigHeaders = config;
+
         $http.defaults.headers.common['X-Auth-Token'] = this.userToken;
         //set the X-AUTH-TOKEN
 
       },
       resetHeader: function resetHeaders(){
-        console.log('userAuthService - resetHeader');
+        //console.log('userAuthService - resetHeader');
         this.userConfigHeaders = config;
         this.userConfigHeaders.headers.Authorization = '';
         //set the X-AUTH-TOKEN
@@ -80,23 +79,3 @@ myApp
     }
 
   }]);
-
-
-/*
- setLogout: function setLogout() {
- console.log('isLogout');
- this.status = false;
- },
- setToken: function setToken(token){
- console.log('userAuthService - setToken');
- this.userToken = token;
- },
- setID: function setID(id){
- console.log('userAuthService - setID');
- this.userID = id;
- },
- setRole: function setRole(role){
- console.log('userAuthService - setRole');
- this.userRole = role;
- },
- */

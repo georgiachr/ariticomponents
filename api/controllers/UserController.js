@@ -8,63 +8,6 @@
 
 module.exports = {
 
-  /* User S I G N U P */
-  /*signup: function (req, res) {
-
-    // Do some validation on the input
-    if (req.body.password !== req.body.confirmPassword) {
-      return res.json(401, {err: 'Password doesn\'t match'});
-    }
-
-    User.create({admin: req.body.admin, fullname: req.body.name, email: req.body.email, encryptedPassword: req.body.password})
-      .exec(function(err, user) {
-        if (err) {
-          res.json(err.status, {err: err});
-          return;
-        }
-        if (user) {
-          res.json({user: user, token: sailsTokenAuth.issueToken(user.id)});
-        }
-    });
-  },*/
-
-
-  /* User L O G I N */
-  /* This is actually the user AUTHENTICATION process*/
-  /*login: function (req, res) {
-
-    var email = req.param('email');
-    var password = req.param('password');
-
-    if (!email || !password) {
-      return res.json(401, {err: 'Email and Password required'});
-    }
-
-    User.findOneByEmail(email, function(err, user) {
-
-      if (!user) {
-        return res.json(401, {err: 'Invalid Email or Password'});
-      }
-
-      User.validPassword(password, user, function(err, valid) {
-
-        if (err) {
-          return res.json(403, {err: 'forbidden'});
-        }
-
-        if (!valid) {
-          return res.json(401, {err: 'invalid email or password'});
-        } else {
-          res.json({user: user, token: sailsTokenAuth.issueToken(user.id)});
-        }
-      });
-
-    })
-
-  }*/
-
-  ////////////////////////////////////////////////////////////////////////////////
-
   /**
    * Normally if unspecified, pointing a route at this action will cause Sails
    * to use its built-in blueprint action.  We're overriding that here to pass
@@ -412,18 +355,6 @@ module.exports = {
       if (!user) {console.log("not user");return res.notFound();}
 
 
-
-      //console.log(new Date());
-
-      /*
-       Compare password attempt from the form params to the encrypted password
-       from the database (`user.password`)
-
-       Passwords.checkPassword({
-         passwordAttempt: 'l0lcatzz',
-         encryptedPassword: 'as34hafsu#w34ndcarok',
-       })
-       */
       require('machinepack-passwords').checkPassword({passwordAttempt: req.param('password') , encryptedPassword: user.encryptedPassword})
         .exec({
 
@@ -431,12 +362,22 @@ module.exports = {
             return res.negotiate(err);
           },
 
-          // If the password from the form params doesn't checkout w/ the encrypted
-          // password from the database...
+
+          /**
+           * INCORRECT password:
+           * If the password from the form parameters doesn't match
+           * the encrypted password from the database returns notFound response (404)
+           *
+           * @returns {*}
+           */
           incorrect: function (){
             return res.notFound();
           },
 
+          /**
+           * SUCCESS password:
+           *
+           */
           success: function (){
             //console.log(JSON.stringify(user));
             // The user is "logging in" (e.g. establishing a session)
@@ -463,8 +404,9 @@ module.exports = {
                 //console.log(JSON.stringify(user));
                 //return res.ok();
 
+
                 // res.json([statusCode, ... ] data);
-                res.json(200, {user: user, token: user.token});
+                res.json(200, {user: user});
               });
           }
       });
@@ -475,7 +417,7 @@ module.exports = {
 
 
   /**
-   * Log out of Activity Overlord.
+   * Log out
    * (wipes `me` from the sesion)
    */
   logout: function (req, res) {
@@ -540,30 +482,28 @@ module.exports = {
 
 
   /**
-   * Sign up for a user account.
-   * (creates a new user, and also logs in as that new user)
+   * Create a new user account.
+   * (creates a new user)
    */
   signup: function(req, res) {
-
-
 
     // Encrypt the password provided by the user
     require('machinepack-passwords').encryptPassword({password: req.param('password')})
       .exec({
 
-        error: function(err) {
+        error: function (err) {
           return res.negotiate(err);
         },
 
-        success: function(encryptedPassword) {
-         require('machinepack-gravatar').getImageUrl({emailAddress: req.param('email')})
-          .exec({
+        success: function (encryptedPassword) {
+          require('machinepack-gravatar').getImageUrl({emailAddress: req.param('email')})
+            .exec({
 
-              error: function(err) {
+              error: function (err) {
                 return res.negotiate(err);
               },
 
-              success: function(gravatarUrl) {
+              success: function (gravatarUrl) {
 
                 // Create a User with the params sent from
                 // the sign-up form --> new.ejs
@@ -604,13 +544,185 @@ module.exports = {
                     id: newUser.id
                   });
                 });
-            }
+              }
 
-        });
-      }
+            });
+        }
+      })
+  },
+
+
+
+  /**
+   * Returns all users
+   * adduser action's policies: isTokenAuthorized, isAdmin
+   *
+   */
+  userListr: function(req, res, next) {
+
+    console.log("USER CONTROLLER: listusers");
+
+    //1. can user do this action? - isUserAuthorized
+    //2. is user logged in - isTokenAuthorized
+    //isAdmin.verifyToken(header_token,function(err, token) {}
+
+
+
+    // Send back a json of all users
+    return res.json(200,{
+      users: users
     });
-  }
 
+  },
+
+  ///////////////////////
+
+  userList: function (req, res) {
+
+    // "Watch" the User model to hear about `publishCreate`'s.
+    User.watch(req);
+
+    User.find().exec(function (err, users) {
+      if (err) return res.negotiate(err);
+
+      var prunedUsers = [];
+
+      // Loop through each user...
+      _.each(users, function (user){
+
+        // "Subscribe" the socket.io socket (i.e. browser tab)
+        // to each User record to hear about subsequent `publishUpdate`'s
+        // and `publishDestroy`'s.
+        if (req.isSocket){
+          User.subscribe(req, user.id);
+        }
+
+        // Only send down white-listed attributes
+        // (e.g. strip out encryptedPassword from each user)
+        prunedUsers.push({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          title: user.title,
+          gravatarUrl: user.gravatarUrl,
+          admin: user.admin,
+          lastLoggedIn: user.lastLoggedIn,
+
+          // Add a property called "msUntilInactive" so the front-end code knows
+          // how long to display this particular user as active.
+          msUntilInactive: (function (){
+            var _msUntilLastActive;
+            var now = new Date();
+            _msUntilLastActive = (user.lastActive.getTime()+15*1000) - now.getTime();
+            if (_msUntilLastActive < 0) {
+              _msUntilLastActive = 0;
+            }
+            return _msUntilLastActive;
+          })()
+        });
+      });
+
+      console.log(prunedUsers);
+
+      // Finally, send array of users in the response
+      return res.json(200, prunedUsers);
+    });
+  },
+
+
+
+
+
+
+//////////////////////
+
+  /**
+   * Create a new user account.
+   * adduser action's policies: isTokenAuthorized, isAdmin
+   *
+   */
+  adduser: function(req, res) {
+
+    console.log("USER CONTROLLER: adduser");
+
+
+    //1. can user do this action? - isUserAuthorized
+    //2. is user logged in - isTokenAuthorized
+    //isAdmin.verifyToken(header_token,function(err, token) {}
+
+    /* User requested the creation of a new user has an ADMIN role? */
+    //isAdmin
+
+
+    /* Create the user */
+    req.validate({
+      email: 'string',
+      password: 'string'
+    });
+
+    // Encrypt user's new password
+    require('machinepack-passwords').encryptPassword({password: req.param('password')})
+      .exec({
+
+        error: function(err) {
+          return res.negotiate(err);
+        },
+
+        success: function(encryptedPassword) {
+
+          require('machinepack-gravatar').getImageUrl({emailAddress: req.param('email')})
+            .exec({
+
+              error: function(err) {
+                return res.negotiate(err);
+              },
+
+              success: function(gravatarUrl) {
+
+                // Create a User with the params sent from
+                // the addUserForm
+                User.create({
+                  name: req.param('name'),
+                  title: req.param('title'),
+                  email: req.param('email'),
+                  encryptedPassword: encryptedPassword,
+                  lastLoggedIn: new Date(),
+                  gravatarUrl: gravatarUrl
+                }, function userCreated(err, newUser){
+
+                  if (err) {
+                    // If this is a uniqueness error about the email attribute,
+                    // send back an easily parseable status code.
+                    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0] && err.invalidAttributes.email[0].rule === 'unique') {
+                      //TODO: use res.emailAddressInUse()
+                      return res.emailAddressInUse();
+                    }
+
+                    // Otherwise, send back something reasonable as our error response.
+                    return res.negotiate(err);
+                  }
+
+
+                  // Let other subscribed sockets know that the user was created.
+                  /*User.publishCreate({
+                    id: newUser.id,
+                    name: newUser.name,
+                    title: newUser.title,
+                    email: newUser.email,
+                    lastLoggedIn: newUser.lastLoggedIn
+                  });*/
+
+                  // Send back the id of the new user
+                  return res.json(200,{
+                    id: newUser.id
+                  });
+                });
+              }
+
+            });
+        }
+      });
+  }
 
 
 };

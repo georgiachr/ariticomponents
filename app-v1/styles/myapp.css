@@ -1,4 +1,4 @@
-html, body {height: 100%;}
+/*html, body {height: 100%;}
 
  .container-fluid{
   height:100%;
@@ -16,4 +16,66 @@ html, body {height: 100%;}
   display: -ms-flexbox;
   display:         flex;
 }
+ */
+
+
+body {
+  color: black;
+}
+
+.wrapper {
+  height: 100%;
+  display: table;
+  width: 100%;
+  text-align: center;
+}
+
+.header {
+  display: table-row;
+  height: 1px;
+
+}
+
+.main {
+  height: 100%;
+  display: table;
+  width: 100%;
+}
+
+.box {
+  display: table-cell;
+}
+
+.sidebar {
+  width: 100px;
+  height: 100%;
+  position: relative;
+
+}
+.menu{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.footer {
+  display: table-row;
+  height:1px;
+  color: #ffffff;
+}
+
+.navbar-right {
+  margin-right: 0px;
+}
+
+/* Basic Style*/
+* { margin:0; padding:0;}
+html, body { height: 100%; }
+/*button { padding: 5px 10px;position:fixed;bottom: 50px;right:0px;left:0px;margin:auto; width: 200px; display: block; -webkit-appearance: none;background: @orange; outline: none;  border: 2px solid #DB9E36; color: @yellow; border-radius: 10px; box-shadow: 0 2px 3px rgba(0,0,0,0.5);cursor: pointer;}*/
+/*button:active {border-color: @beige; color:@beige;}*/
+
+
 

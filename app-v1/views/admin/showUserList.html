@@ -1,0 +1,38 @@
+<div ng-controller="ShowListOfUsersCtrl">
+
+  <!-- <div class="jumbotron"> -->
+    <h2>User list </h2>
+
+      <div class="row-fluid">
+
+        <div class="col-md-12 col-lg-12">
+
+            <table ng-table="tableParams" class="table table-bordered table-striped">
+
+              <tr>
+                <td>#</td>
+                <td>Photo</td>
+                <td>Full Name</td>
+                <td>Email</td>
+                <td>Role</td>
+                <td></td>
+              </tr>
+
+              <tr ng-repeat="row in userList">
+                <td>{{ $index + 1 }}</td>
+                <td title="Photo">photohere</td>
+                <td title="FullName">{{row.name}}</td>
+                <td title='Email' >{{row.email}}</td>
+                <td title='Role' >{{row.title}}</td>
+                <td>buttons here</td>
+              </tr>
+
+            </table>
+
+        </div>
+
+      </div>
+
+    <!-- </div> -->
+
+</div>

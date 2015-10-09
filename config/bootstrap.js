@@ -21,11 +21,11 @@ module.exports.bootstrap = function(cb) {
 
 // Encrypt a string using the BCrypt algorithm.
   Passwords.encryptPassword({
-    password: ''
+    password: 'qwe'
   }).exec({
 // An unexpected error occurred.
     error: function (err){
-
+      console.log('Error in bootstrap.js ');
     },
 // OK.
     success: function (result){
@@ -34,7 +34,7 @@ module.exports.bootstrap = function(cb) {
         {admin: true},
 
         // Create one if no such user is found
-        {admin: true, encryptedPassword: result, title: 'Administrator'}
+        {admin: true, encryptedPassword: result, title: 'Administrator', name: 'Georgia Christodoulou', email: 'g@g.com'}
       ).exec(cb);
     }
   });

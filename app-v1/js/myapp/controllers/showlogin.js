@@ -2,14 +2,14 @@
  * Created by georgia.chr on 26-Aug-15.
  *
  */
-myApp.controller('ShowLogin', ['$scope','loginService', 'myProfileService', function($scope, loginService, myProfileService){
+myApp.controller('ShowLogin', ['$scope', function($scope){
 
   /**
    * SCOPE VARIABLES
    */
-  $scope.theloginService = loginService;
+  /*$scope.theloginService = loginService;
   $scope.themyprofileservice = myProfileService;
-  $scope.loginText = $scope.theloginService.status? "logged in" : "logged out";
+  $scope.loginText = $scope.theloginService.status? "logged in" : "logged out";*/
 
   /**
    * SCOPE FUNCTIONS
@@ -19,17 +19,17 @@ myApp.controller('ShowLogin', ['$scope','loginService', 'myProfileService', func
   /**
    * FUNCTIONS
    */
-  watchandreact = function (modified){
+  /*watchandreact = function (modified){
     console.log("modified");
-  }
+  }*/
 
   /**
    * WATCHES
    */
-  $scope.$watch('theloginService.isLogin()', function(isLoggedIn){
+  /*$scope.$watch('theloginService.isLogin()', function(isLoggedIn){
     isLoggedIn ? $scope.loginText = "logged in": $scope.loginText = "log out";
   }, true);
-  $scope.$watch('themyprofileservice.getChanges()',watchandreact,true);
+  $scope.$watch('themyprofileservice.getChanges()',watchandreact,true);*/
 
   /**
    * DOM EVENTS

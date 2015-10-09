@@ -10,8 +10,13 @@
 myApp
 .config(function ($stateProvider, $urlRouterProvider) {
   $stateProvider
-    .state('admin', {
+
+    .state('administrator', {
       views: {
+        "topleftnavigation": {
+          //controller: 'AdminUserActionsCtrl',
+          templateUrl: "views/admin/topleftnavigation.html"
+        },
         "mainwindow": {
           //controller: 'SideMenuViewVideosCtrl'
           templateUrl: "views/admin/mainwindow.html"
@@ -25,6 +30,7 @@ myApp
       }
     }
   )
+
     .state('admin.users', {
       views: {
         "detailinformation": {
@@ -49,8 +55,8 @@ myApp
       //url: '/nurse/',
       views: {
         "mainwindow": {
-          //controller: 'SideMenuViewVideosCtrl'
-          templateUrl: "views/nurse/mainwindow.html"
+        //  controller: 'SideMenuViewVideosCtrl',
+          templateUrl: "views/nurse/topleftnavigation.html"
         },
         "navleft": {
           templateUrl: "views/nurse/navleft.html"
@@ -76,17 +82,17 @@ myApp
       }
     }
   )
-    .state('coordinator', {
-      //url: '/coordinator/',
+    .state('guest', {
+
       views: {
         "mainwindow": {
-          templateUrl: "views/coordinator/mainwindow.html"
+          templateUrl: "views/mainwindow.html"
         },
         "navleft": {
-          templateUrl: "views/coordinator/navleft.html"
+          //templateUrl: "views/coordinator/navleft.html"
         },
         "navright": {
-          templateUrl: "views/coordinator/navright.html"
+          //templateUrl: "views/coordinator/navright.html"
         }
       }
     }
