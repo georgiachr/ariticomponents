@@ -1,4 +1,7 @@
-<div ng-controller="ShowListOfUsersCtrl">
+<!--
+This presents a table of users using the smart table directive
+-->
+<div >
 
   <!-- <div class="jumbotron"> -->
     <h2>User list </h2>
@@ -7,25 +10,105 @@
 
         <div class="col-md-12 col-lg-12">
 
-            <table ng-table="tableParams" class="table table-bordered table-striped">
+            <!-- use stSafeSrc to watch a collection st-safe-src="userCollectionFromServer" -->
+           <table st-table="displayedUserList" st-safe-src="userListFromServer" class="table table-striped editable-table">
 
+              <!-- displayed User List filter example -->
               <tr>
-                <td>#</td>
-                <td>Photo</td>
-                <td>Full Name</td>
-                <td>Email</td>
-                <td>Role</td>
-                <td></td>
+                <th colspan="6"><input st-search="" class="form-control" placeholder="displayed User List Filter example" type="text"/>
+                </th>
               </tr>
 
-              <tr ng-repeat="row in userList">
-                <td>{{ $index + 1 }}</td>
-                <td title="Photo">photohere</td>
-                <td title="FullName">{{row.name}}</td>
-                <td title='Email' >{{row.email}}</td>
-                <td title='Role' >{{row.title}}</td>
-                <td>buttons here</td>
+              <!-- global search example -->
+              <tr>
+                <th colspan="6"><input st-search="" class="form-control" placeholder="Global Search example " type="text"/>
+                </th>
               </tr>
+
+              <!-- Define headers -->
+              <thead>
+                <tr>
+                  <th class="center">#</th>
+                  <th class="center">Photo</th>
+                  <th class="center" st-sort="name">Full Name </th>
+                  <th class="center">Email</th>
+                  <th class="center">User Role</th>
+                  <th ></th>
+                </tr>
+              </thead>
+
+              <!-- Define body -->
+              <tbody ng-show="!mc.isLoading">
+                <tr ng-repeat="user in displayedUserList">
+                  <td>
+                    {{$index + 1}}
+                  </td>
+
+                  <!-- Photo -->
+                  <td title="Photo">
+                    <img ng-src="user.gravatarUrl" class="img-responsive" style="display: block; margin-left: auto; margin-right: auto">
+                  </td>
+
+                  <!-- Full Name -->
+                  <td title="FullName">
+                      <span editable-text="user.name" e-name="name" e-form="rowform" e-required >
+                        {{ user.name  }}
+                      </span>
+                  </td>
+
+                  <!-- Email -->
+                  <td title='Email' >
+                      <span editable-text="user.email" e-name="email" e-form="rowform" e-required>
+                        {{ user.email}}
+                      </span>
+                  </td>
+
+                  <!-- User Role -->
+                  <td title='Role' >
+                    {{user.title}}
+                  </td>
+
+                  <td> <!-- form -->
+
+                    <form editable-form class="form-buttons form-inline" name="rowform" ng-show="rowform.$visible" onbeforesave="saveUser($index)" shown="inserted == user">
+                      <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+                        save
+                      </button>
+                      <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+                        cancel
+                      </button>
+                    </form>
+
+                    <div ng-show="!rowform.$visible">
+                      <a href="#" class="btn" tooltip-placement="top" tooltip="Edit" ng-click="rowform.$show()">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                      </a>
+                      <a href="#" class="btn" tooltip-placement="top" tooltip="Remove" ng-click="removeUser($index)">
+                        <i class="glyphicon glyphicon-remove"></i>
+                      </a>
+                    </div>
+
+                  </td> <!-- form -->
+                </tr>
+              </tbody>
+
+              <tfoot>
+                <tr>
+
+                  <td class="text-center" >
+                    <div st-pagination=""
+                         st-items-by-page="paginationItemsByPage"
+                         st-displayed-pages="paginationPagesToShow"
+                         st-page-change="onpagechange()">
+                    </div>
+                    <pre >Page: {{paginationCurrentPage}} / {{paginationTotalPages}}</pre>
+                  </td>
+
+                </tr>
+
+
+
+              </tfoot>
 
             </table>
 

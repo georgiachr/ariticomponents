@@ -41,6 +41,7 @@
 
 config/local.js
 config/globals.js
+config/bootstrap.js
 
 
 

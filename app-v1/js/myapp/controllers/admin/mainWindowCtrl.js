@@ -103,7 +103,6 @@ myApp
           }
           else if (useractionservice.getSecondaryAction() == 'list'){
             $scope.secondaryAdminActions.users.list = true;
-            console.log('in hereeeeeeeeeeeeeee');
           }
 
         }

@@ -1,0 +1,130 @@
+<!--
+This presents a table of users
+-->
+<div >
+
+  <h2>User list </h2>
+
+  <div class="row-fluid">
+
+      <div class="form-group jumbotron">
+        <div class="col-md-8 col-lg-8">
+          <input type="search"
+                 class="form-control"
+                 placeholder="Search something here ... "
+                 ng-model="searchText"
+                 ng-change="getListOfUsersFromDB()"
+                 id="search">
+        </div>
+
+        <div class="col-md-2 col-lg-2">
+          <p>{{searchText}}</p>
+        </div>
+
+      </div>
+
+
+  </div>
+
+
+
+  <div class="row-fluid">
+
+    <div class="col-md-12 col-lg-12">
+
+      <!-- use stSafeSrc to watch a collection st-safe-src="userCollectionFromServer" -->
+      <table class="table table-striped editable-table">
+
+        <!-- Define headers -->
+        <thead>
+          <tr>
+            <th class="center">Photo</th>
+            <th class="center">Full Name </th>
+            <th class="center">Email</th>
+            <th class="center">User Role</th>
+            <th ></th>
+          </tr>
+        </thead>
+
+        <!-- Define body -->
+        <tbody>
+        <tr ng-repeat="user in userListFromServer">
+
+
+          <!-- Photo -->
+          <td title="Photo">
+            <img ng-src="user.gravatarUrl" class="img-responsive" style="display: block; margin-left: auto; margin-right: auto">
+          </td>
+
+          <!-- Full Name -->
+          <td title="FullName">
+                      <span editable-text="user.name" e-name="name" e-form="rowform" e-required >
+                        {{ user.name  }}
+                      </span>
+          </td>
+
+          <!-- Email -->
+          <td title='Email' >
+                      <span editable-text="user.email" e-name="email" e-form="rowform" e-required>
+                        {{ user.email}}
+                      </span>
+          </td>
+
+          <!-- User Role -->
+          <td title='Role' >
+            {{user.title}}
+          </td>
+
+          <td> <!-- form -->
+
+            <form editable-form class="form-buttons form-inline" name="rowform" ng-show="rowform.$visible" onbeforesave="saveUser($index)" shown="inserted == user">
+              <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+                save
+              </button>
+              <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+                cancel
+              </button>
+            </form>
+
+            <div ng-show="!rowform.$visible">
+              <a href="#" class="btn" tooltip-placement="top" tooltip="Edit" ng-click="rowform.$show()">
+                <i class="glyphicon glyphicon-pencil"></i>
+              </a>
+              <a href="#" class="btn" tooltip-placement="top" tooltip="Remove" ng-click="removeUser($index)">
+                <i class="glyphicon glyphicon-remove"></i>
+              </a>
+            </div>
+
+          </td> <!-- form -->
+        </tr>
+
+        </tbody>
+
+        <tfoot>
+
+        </tfoot>
+
+      </table>
+
+      <div>
+        <pagination total-items="paginationTotalItems"
+                    ng-model="paginationCurrentPage"
+                    ng-change="prepareAndDisplayCurrentPageOfUsers()"
+                    max-size="paginationMaxNumberOfPages"
+                    items-per-page="paginationNumberOfItemsByPage"
+                    class="pagination-sm"
+                    boundary-links="true"
+                    rotate="false"
+                    num-pages="paginationTotalPages">
+        </pagination>
+        <pre >Page: {{paginationCurrentPage}} / {{paginationTotalPages}}</pre>
+      </div>
+
+
+    </div>
+
+  </div>
+
+  <!-- </div> -->
+
+</div>

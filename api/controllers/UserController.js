@@ -44,6 +44,36 @@ module.exports = {
     });
   },
 
+  removeUser: function (req, res) {
+
+    if (!req.param('id')){
+      return res.badRequest('id is a required parameter.');
+    }
+
+    User.destroy({
+      id: req.param('id')
+    }).exec(function (err, usersDestroyed){
+      if (err) return res.negotiate(err);
+      if (usersDestroyed.length === 0) {
+        return res.notFound();
+      }
+
+      // Let everyone who's subscribed know that this user is deleted.
+      User.publishDestroy(req.param('id'), undefined, {
+        previous: {
+          name: usersDestroyed[0].name
+        }
+      });
+
+      // Unsubscribe all the sockets (e.g. browser tabs) who are currently
+      // subscribed to this particular user.
+      _.each(User.subscribers(usersDestroyed[0]), function(socket) {
+        User.unsubscribe(socket, usersDestroyed[0]);
+      });
+
+      return res.ok();
+    });
+  },
 
 
   /**
@@ -193,11 +223,6 @@ module.exports = {
     });
   },
 
-
-
-
-
-
   /**
    * Update your own profile
    * ("you" being the currently-logged in user, aka `req.session.me`)
@@ -334,6 +359,35 @@ module.exports = {
 
   },
 
+  /**
+   * Check the provided email address and password, and if they
+   * match a real user in the database, sign in to Activity Overlord.
+   */
+  validateUserToken: function (req, res) {
+
+    req.validate({
+      email: 'string',
+      token: 'string'
+    });
+
+    // Try to look up user using the provided email address
+    User.findOne({
+      email: req.param('email')
+    }, function foundUser(err, user) {
+      if (err) {console.log("negotiate error");return res.negotiate(err)};
+      if (!user) {console.log("not user");return res.notFound();}
+
+      //console.log("user:" + user.token);
+      //console.log("param token:" + req.param('token'));
+
+      if(user.token == req.param('token')) {
+        res.json(200, {user: user});
+      }
+
+      return res.notFound();
+
+    });
+  },
 
 
   /**
@@ -379,43 +433,39 @@ module.exports = {
            *
            */
           success: function (){
-            //console.log(JSON.stringify(user));
             // The user is "logging in" (e.g. establishing a session)
-            // so update the `lastLoggedIn` attribute.
+            //console.log(JSON.stringify(user));
+
+            // 1. so update the `lastLoggedIn` attribute.
             User.update(user.id, {lastLoggedIn: (new Date()).toString()},
               function(err) {
                 if (err) return res.negotiate(err);
 
-              // Store user id in the user session
-              //req.session.me = user.id;
-
-              // All done- let the client know that everything worked.
-              //return res.ok();
             });
 
-            User.update(user.id, {token: jwtToken.issueToken({userid: user.id})},
-              function(err) {
+            // 2. issue a user token using exec
+            /*
+            User.update(user.id, {token: jwtToken.issueToken({userid: user.id})}).exec(
+              function(err,updated) {
                 if (err) return res.negotiate(err);
 
-                // Store user id in the user session
-                //req.session.me = user.id;
+                // res.json([statusCode, ... ] data);
+                res.json(200, {user: updated[0]});
+              });*/
 
-                // All done- let the client know that everything worked.
-                //console.log(JSON.stringify(user));
-                //return res.ok();
-
+            // 2. issue a user token - another way
+            // Keep in mind that function(err,updated) is used this way
+            User.update(user.id, {token: jwtToken.issueToken({userid: user.id})},
+              function(err,updated) {
+                if (err) return res.negotiate(err);
 
                 // res.json([statusCode, ... ] data);
-                res.json(200, {user: user});
+                res.json(200, {user: updated[0]});
               });
           }
       });
     });
   },
-
-
-
-
   /**
    * Log out
    * (wipes `me` from the sesion)
@@ -551,87 +601,236 @@ module.exports = {
       })
   },
 
+  /*
+   findAll: function (req, res) {
+   User.find().done(function (err, users) {
+   if (err) {
+   res.send(400);
+   } else {
+   res.send(users);
+   }
+   });
+   },
+
+   findByName: function(req, res) {
+   var name = req.param('name');
+   User.findByName(name).done(function (err, users) {
+   if (err) {
+   res.send(400);
+   } else {
+   res.send(users);
+   }
+   });
+   }
+
+   */
+
 
 
   /**
-   * Returns all users
+   * Returns a list of users
+   * @param req
+   * @param res
+   * limit() function in MongoDB is used to specify the maximum number of results to be returned.
+   */
+  userList: function (req, res) {
+
+    var usercount = 0;
+    var textForSearch = req.param('searchText');
+    var pagesize = req.param("pageSize");
+    var skipcount = req.param("paginationGetListStartIndex")-1;
+
+    if(textForSearch === undefined)
+      textForSearch = "";
+
+
+    var likeObj =
+        {
+          name:'%'+textForSearch+'%'
+        };
+
+    var likeObject = {
+      like:{
+        name:'%'+textForSearch+'%'
+      }
+    };
+
+    var likewithpaginationObject = {
+      like:{
+        name:'%'+textForSearch+'%'
+      },
+      skip:skipcount,
+      limit:pagesize
+    };
+
+
+
+    //Get the total number of User model collection
+    User.count(likeObject).exec({
+      error:function(err){
+        return console.log(err);
+      },
+      success: function (num) {
+        usercount = num;
+
+        console.log(textForSearch);
+        //User.find().limit(pagesize).skip(skipcount).exec({
+        User.find(likewithpaginationObject).exec({
+
+          error: function (err) {
+            return res.negotiate(err);
+          },
+
+          success: function (users) {
+
+            //var totalNumberOfUsers = 0;
+            var prunedUsers = [];
+
+            //console.log("users = " + JSON.stringify(users));
+
+            // Loop through each user...
+            _.each(users, function (user) {
+
+                // Only send down white-listed attributes
+                // (e.g. strip out encryptedPassword from each user)
+                prunedUsers.push({
+                  id: user.id,
+                  name: user.name,
+                  email: user.email,
+                  title: user.title,
+                  gravatarUrl: user.gravatarUrl,
+                  //admin: user.admin,
+                  lastLoggedIn: user.lastLoggedIn,
+
+                  // Add a property called "msUntilInactive" so the front-end code knows
+                  // how long to display this particular user as active.
+                  msUntilInactive: (function () {
+                    var _msUntilLastActive;
+                    var now = new Date();
+                    _msUntilLastActive = (user.lastActive.getTime() + 15 * 1000) - now.getTime();
+                    if (_msUntilLastActive < 0) {
+                      _msUntilLastActive = 0;
+                    }
+                    return _msUntilLastActive;
+                  })()
+                });
+              }
+            );
+
+            // Response
+            return res.json(200,
+              {
+                listOfUsers: prunedUsers,
+                totalNumberOfUsers: usercount
+              }
+            );
+
+            /*
+             //Get the total number of User model collection
+             User.count().exec(function (err, num) {
+             if (err) {
+             return console.log(err);
+             }
+             else {
+             totalNumberOfUsers = num;
+
+             // Response
+             return res.json(200,
+             {
+             listOfUsers: prunedUsers,
+             totalNumberOfUsers: totalNumberOfUsers
+             }
+             );
+             }
+             });
+             */
+            //console.log("2. totalNumberOfUsers out = " + totalNumberOfUsers);
+
+          } //in success
+
+        });
+
+      }
+
+
+
+    });
+  },
+
+
+
+
+  /**
+   * Update a user account.
+   * Update only user's name and user's email
    * adduser action's policies: isTokenAuthorized, isAdmin
    *
    */
-  userListr: function(req, res, next) {
+  updateUser: function(req, res) {
 
-    console.log("USER CONTROLLER: listusers");
+    if (!req.param('id')) {
+      return res.badRequest('`id` of user to edit is required');
+    }
 
-    //1. can user do this action? - isUserAuthorized
-    //2. is user logged in - isTokenAuthorized
-    //isAdmin.verifyToken(header_token,function(err, token) {}
+    (function _prepareAttributeValuesToSet(allParams, cb){
 
+      var setAttrVals = {};
+      if (allParams.name) {
+        setAttrVals.name = allParams.name;
+      }
+      if (allParams.title) {
+        setAttrVals.title = allParams.title;
+      }
+      if (allParams.email) {
+        setAttrVals.email = allParams.email;
+        // If email address changed, also update gravatar url
+        // execSync() is only available for synchronous machines.
+        // It will return the value sent out of the machine's defaultExit and throw otherwise.
+        setAttrVals.gravatarUrl = require('machinepack-gravatar').getImageUrl({
+          emailAddress: allParams.email
+        }).execSync();
+      }
 
+      // In this case, we use _.isUndefined (which is pretty much just `typeof X==='undefined'`)
+      // because the parameter could be sent as `false`, which we **do** care about.
+      if ( !_.isUndefined(allParams.admin) ) {
+        setAttrVals.admin = allParams.admin;
+      }
 
-    // Send back a json of all users
-    return res.json(200,{
-      users: users
-    });
-
-  },
-
-  ///////////////////////
-
-  userList: function (req, res) {
-
-    // "Watch" the User model to hear about `publishCreate`'s.
-    User.watch(req);
-
-    User.find().exec(function (err, users) {
+      // Encrypt password if necessary
+      if (!allParams.password) {
+        return cb(null, setAttrVals);
+      }
+      require('machinepack-passwords').encryptPassword({password: allParams.password}).exec({
+        error: function (err){
+          return cb(err);
+        },
+        success: function (encryptedPassword) {
+          setAttrVals.encryptedPassword = encryptedPassword;
+          return cb(null, setAttrVals);
+        }
+      });
+    })(req.allParams(), function afterwards (err, attributeValsToSet){
       if (err) return res.negotiate(err);
 
-      var prunedUsers = [];
+      User.update(req.param('id'), attributeValsToSet).exec(function (err){
+        if (err) return res.negotiate(err);
 
-      // Loop through each user...
-      _.each(users, function (user){
-
-        // "Subscribe" the socket.io socket (i.e. browser tab)
-        // to each User record to hear about subsequent `publishUpdate`'s
-        // and `publishDestroy`'s.
-        if (req.isSocket){
-          User.subscribe(req, user.id);
-        }
-
-        // Only send down white-listed attributes
-        // (e.g. strip out encryptedPassword from each user)
-        prunedUsers.push({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          title: user.title,
-          gravatarUrl: user.gravatarUrl,
-          admin: user.admin,
-          lastLoggedIn: user.lastLoggedIn,
-
-          // Add a property called "msUntilInactive" so the front-end code knows
-          // how long to display this particular user as active.
-          msUntilInactive: (function (){
-            var _msUntilLastActive;
-            var now = new Date();
-            _msUntilLastActive = (user.lastActive.getTime()+15*1000) - now.getTime();
-            if (_msUntilLastActive < 0) {
-              _msUntilLastActive = 0;
-            }
-            return _msUntilLastActive;
-          })()
+        // Let all connected sockets who were allowed to subscribe to this user
+        // record know that there has been a change.
+        User.publishUpdate(req.param('id'), {
+          name: attributeValsToSet.name,
+          email: attributeValsToSet.email,
+          title: attributeValsToSet.title,
+          admin: attributeValsToSet.admin,
+          gravatarUrl: attributeValsToSet.gravatarUrl
         });
+
+        return res.ok();
       });
-
-      console.log(prunedUsers);
-
-      // Finally, send array of users in the response
-      return res.json(200, prunedUsers);
     });
+
   },
-
-
-
-
 
 
 //////////////////////
@@ -642,8 +841,6 @@ module.exports = {
    *
    */
   adduser: function(req, res) {
-
-    console.log("USER CONTROLLER: adduser");
 
 
     //1. can user do this action? - isUserAuthorized

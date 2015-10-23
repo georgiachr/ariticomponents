@@ -26,7 +26,7 @@ myApp
   .directive('showUserListDirective', ['$compile', function ($compile) {
     return {
       restrict: 'AE',
-      templateUrl: "views/admin/showUserList.html"
+      templateUrl: "views/admin/showUserListPartB.html"
     }
   }])
   .directive('showStatisticsDirective', ['$compile', function ($compile) {

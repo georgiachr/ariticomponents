@@ -57,8 +57,11 @@ module.exports.routes = {
 
   // User enrollment + authentication
   'POST /adduser': 'UserController.adduser',
+  'POST /updateuser': 'UserController.updateuser',
+  'POST /removeuser': 'UserController.removeuser',
   'PUT /login': 'UserController.login',
   'GET /userlist': 'UserController.userlist',
-  '/logout': 'UserController.logout'
+  '/logout': 'UserController.logout',
+  'GET /checkUserToken': 'UserController.validateUserToken'
 
 };

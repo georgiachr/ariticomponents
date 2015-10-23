@@ -1,7 +1,9 @@
+<div ng-controller="CreateUserCtrl">
+
 <div class="jumbotron">
   <h2>Create a new user!</h2>
 
-  <form class="form-horizontal">
+  <form class="form-horizontal" ng-submit="submitAddUserForm()" id="add-user-form" name="adduser" >
     <fieldset>
 
       <div class="row-fluid">
@@ -9,19 +11,25 @@
         <div class="col-md-8">
 
           <!-- Form Name -->
-          <legend>Personal Information:</legend>
+          <legend >Personal Information:</legend>
 
           <!-- Name input-->
-          <div class="form-group">
-            <label class="col-md-2 col-lg-2 control-label" for="name">Name</label>
+          <div class="control-group form-group"  ng-class="{'has-error':adduser.name.$invalid &&
+                                adduser.name.$dirty}"> <!-- dirty = user has already interacted with the form -->
+            <label class="col-md-2 col-lg-2 control-label">Name</label>
             <div class="col-md-8 col-lg-8">
-              <input id="name" name="name" type="text" placeholder="Nikola" class="form-control input-md" required="">
+              <!-- For this input field make it required, and have a max length of 25 -->
+              <input type="text" class="form-control" placeholder="e.g. Nikola Tesla" name="name" ng-model="addUserForm.name" ng-maxlength="50" required>
             </div>
+            <span class="help-block has-error" ng-if="adduser.name.$dirty">
+              <span ng-show="adduser.name.$error.required">Name is required.</span>
+              <span ng-show="adduser.name.$error.maxlength">The name cannot be more than 50 characters.</span>
+            </span>
           </div>
 
           <!-- Surname input-->
           <div class="form-group">
-            <label class="col-md-2 col-lg-2 control-label" for="email">Surname</label>
+            <label class="col-md-2 col-lg-2 control-label" >Surname</label>
             <div class="col-md-8 col-lg-8">
               <input id="surname" name="surname" type="text" placeholder="Tesla" class="form-control input-md" required="">
             </div>
@@ -29,26 +37,37 @@
 
           <!-- Email input-->
           <div class="form-group ">
-            <label class="col-md-2 col-lg-2 control-label" for="email">Email</label>
+            <label class="col-md-2 col-lg-2 control-label" >Email</label>
             <div class="col-md-8 col-lg-8">
-              <input id="email" name="email" type="text" placeholder="nikola@tesla" class="form-control input-md" required="">
+              <input type="email" class="form-control" placeholder="nikola@tesla.com" name="email" ng-model="addUserForm.email" required >
+                <span class="help-block has-error" ng-if="adduser.email.$dirty">
+                  <span ng-show="adduser.email.$error.required">Email address is required.</span>
+                  <span ng-show="adduser.email.$error.email">Not a valid email address.</span>
+                </span>
             </div>
           </div>
 
           <!-- Password input-->
           <div class="form-group ">
-            <label class="col-md-2 col-lg-2 control-label" for="password">Password</label>
+            <label class="col-md-2 col-lg-2 control-label" >Password</label>
             <div class="col-md-8 col-lg-8">
-              <input id="password" name="password" type="password" placeholder="password" class="form-control input-md" required="">
+              <input type="password" class="form-control" placeholder="at least 6 characters" name="password" ng-model="addUserForm.password" id="password" required ng-minlength="6" compare-to="addUserForm.confirmPassword" >
+                <span class="help-block has-error" ng-if="adduser.password.$dirty">
+                  <span ng-show="adduser.password.$error.required">Password is required.</span>
+                  <span ng-show="adduser.password.$error.minlength">Password must be at least 6 characters.</span>
+                </span>
             </div>
           </div>
 
           <!-- Password input-->
           <div class="form-group ">
-            <label class="col-md-2 col-lg-2 control-label" for="confpassword">Retype password</label>
+            <label class="col-md-2 col-lg-2 control-label" >Retype password</label>
             <div class="col-md-8 col-lg-8">
-              <input id="confpassword" name="confpassword" type="password" placeholder="password" class="form-control input-md" required="">
-
+              <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="addUserForm.confirmPassword" required>
+                <span class="help-block has-error" ng-if="adduser.confirmation.$dirty">
+                  <span ng-show="adduser.password.$error.compareTo">Password must match.</span>
+                  <span ng-show="adduser.confirmation.$error.required">Confirmation password is required.</span>
+                </span>
             </div>
           </div>
 
@@ -65,7 +84,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="filebutton">Upload Avatar:</label>
             <div class="col-md-4">
-              <input id="filebutton" name="filebutton" class="input-file" type="file">
+              <input id="filebutton" name="useravatar" class="input-file" type="file" ng-change="uploadAvatarImage()" ng-model="addUserForm.avatar">
             </div>
           </div>
 
@@ -79,26 +98,19 @@
 
         <div class="col-md-8">
 
-          <legend>Job details:</legend>
+          <legend >Job details:</legend>
 
           <!-- Button Drop Down -->
           <div class="form-group">
-            <label class="col-md-2 col-lg-2 control-label" for="buttondropdown">Position</label>
+            <label class="col-md-2 col-lg-2 control-label" >Position</label>
             <div class="col-md-8 col-lg-8">
-              <div class="input-group">
-                <input id="buttondropdown" name="buttondropdown" class="form-control" placeholder="Administrator" type="text" required="">
-                <div class="input-group-btn">
-                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Select
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu pull-right">
-                    <li><a href="#">Administrator</a></li>
-                    <li><a href="#">Doctor</a></li>
-                    <li><a href="#">Nurse</a></li>
-                  </ul>
-                </div>
+              <div bs-dropdown
+                   bs-dropdown-display="MyDropDown"
+                   bs-dropdown-items="userRolesOptions"
+                   ng-model="addUserForm.title"
+                   ng-change="changeUserRole()">
               </div>
+
             </div>
           </div>
 
@@ -122,16 +134,14 @@
 
         <div class="col-md-2 col-md-offset-10">
 
-
-
-          <!-- Button (Double) -->
+          <!-- Disable add button until the form has no errors -->
           <div class="form-group">
-
-            <div >
-              <button id="submit" name="submit" class="btn btn-success">Save</button>
-              <button id="discard" name="discard" class="btn btn-danger">Discard</button>
-            </div>
-
+            <button class="col-md-2 col-lg-2 btn btn-success btn-lg btn-block" type="submit" ng-disabled="adduser.$invalid">
+              <span ng-show="!addUserForm.loading">Create</span>
+            </button>
+            <button class="col-md-2 col-lg-2 btn btn-primary btn-lg btn-block" type="reset" >
+              <span >Reset</span>
+            </button>
           </div>
 
         </div>
@@ -141,4 +151,5 @@
     </fieldset>
   </form>
 
+</div>
 </div>

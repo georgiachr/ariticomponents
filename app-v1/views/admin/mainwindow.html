@@ -7,13 +7,13 @@ When Admin selects an action this action triggers ng-show attribute of the appro
 
 <div ng-controller="AdminMainWindowCtrl">
 
-  <div ng-show="mainAdminActions.users">
+  <div ng-if="mainAdminActions.users">
 
-    <create-user-directive ng-controller="CreateUserCtrl" ng-show="secondaryAdminActions.users.add">
+    <create-user-directive ng-controller="CreateUserCtrl" ng-if="secondaryAdminActions.users.add">
       <p>create user directive is shown</p>
     </create-user-directive>
 
-    <show-user-list-directive ng-show="secondaryAdminActions.users.list">
+    <show-user-list-directive ng-controller="ShowListOfUsersCtrl" ng-if="secondaryAdminActions.users.list">
       <p>Another Directive is shown</p>
     </show-user-list-directive>
 
@@ -21,7 +21,7 @@ When Admin selects an action this action triggers ng-show attribute of the appro
 
   </div>
 
-  <div ng-show="mainAdminActions.statistics">
+  <div ng-if="mainAdminActions.statistics">
 
     <p>Nothing for statistics yet</p>
 

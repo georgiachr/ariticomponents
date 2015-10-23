@@ -33,6 +33,7 @@
     "angular-bootstrap": "~0.13.3",
     "angular-bootstrap-dropdown": "*",
     "angular-cookies": "~1.4.7",
-    "ng-table": "~0.8.3"
+    "angular-xeditable": "~0.1.9",
+    "angular-smart-table": "~2.1.4"
   }
 }

@@ -28,11 +28,20 @@ myApp
 
 
     // just for testing - not working
-    $scope.addUserForm.title = $scope.userRolesOptions[1];
+    $scope.addUserForm.title = $scope.userRolesOptions[0];
 
     /* ================================= FUNCTIONS ================================= */
+
+    $scope.changeUserRole = function(){
+
+    };
+
+    $scope.printUserRole = function() {
+      return $scope.addUserForm.title;
+    };
+
     $scope.la = function() {
-      console.log("addUserForm.role = " + $scope.role);
+      //console.log("addUserForm.role = " + $scope.role);
     };
 
 
@@ -41,8 +50,6 @@ myApp
      * http request to SAILS
      */
     $scope.submitAddUserForm = function(){
-      console.log("createUserCtrl - submitAddUserForm");
-
 
       // Set the loading state (i.e. show loading spinner)
       $scope.addUserForm.loading = true;
@@ -137,7 +144,7 @@ myApp
 
     $scope.$on('createUserEvent', function(event)
     {
-      console.log("Got the message here!!!!");
+      //console.log("Got the message here!!!!");
     });
 
 

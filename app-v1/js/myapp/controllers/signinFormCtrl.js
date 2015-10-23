@@ -36,7 +36,7 @@ myApp
      */
     $scope.pressLogoutButton = function () {
 
-      console.log("inside pressLogoutButton");
+
 
       /**
        * LOGOUT request to Sails
@@ -73,8 +73,6 @@ myApp
      */
     $scope.submitLoginForm = function (){
 
-      console.log("inside submitLoginForm");
-
       /**
        * req_send
        * req_received
@@ -89,7 +87,7 @@ myApp
 
       $timeout(function(){
         if($scope.state == "req_send"){
-          console.log("loginTimeout emit");
+
           $scope.$emit('loginTimeout');
         }
       },5000);
@@ -101,7 +99,7 @@ myApp
         password: $scope.loginForm.password
       })
         .then(function onSuccess (responseData){
-          console.log("SIGN-IN onSuccess state");
+
 
           var data = angular.fromJson(responseData)['data'];
           //var config = angular.fromJson(responseData)['config'];
@@ -116,7 +114,7 @@ myApp
           * 3. Use the angular service to indicate that login has been success
           * */
           $scope.state = "req_received";
-          $scope.$emit('loginSuccess');
+
 
         })
       /**

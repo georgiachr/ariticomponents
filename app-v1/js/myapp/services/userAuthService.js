@@ -10,7 +10,7 @@
  */
 
 myApp
-  .service('useridentity', ['$http',function($http) {
+  .service('useridentity',['$http','$cookies',function($http,$cookies) {
 
     return {
       userStatus: false, // if we have a user
@@ -18,19 +18,29 @@ myApp
       userRole: null,
       userConfigHeaders: null,
       userName: null,
+      userEmail: null,
 
       setUser: function setUser(data){
         this.userName = data.user['name'];
         this.userToken = data.user['token']; /* user's token */
         this.userRole = data.user['title']; /* */
         this.userID = data.user['id'];
-
+        this.userEmail = data.user['email'];
       },
-
+      setCookie: function setCookie(data){
+        if(data != undefined)
+          $cookies.putObject("userToken",{userrole:data.user['title'],useremail:data.user['email'],token:data.user['token']});
+      }
+      ,
+      getCookie: function getCookie(){
+        return $cookies.getObject("userToken");
+      }
+      ,
       loginUser: function loginUser(data){
         this.userStatus = true; /* there is a logged in user */
         this.setUser(data);
         this.setHeader();
+        this.setCookie(data);
       },
 
       logoutUser: function logoutUser(){
