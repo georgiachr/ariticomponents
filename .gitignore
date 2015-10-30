@@ -90,6 +90,9 @@ lib-cov
 *.seed
 *.log
 *.out
+/config/connections.js
+/config/globals.js
+
 *.pid
 npm-debug.log
 
@@ -113,6 +116,3 @@ nbproject
 .node_history
 
 
-config/connections.js
-config/local.js
-config/globals.js

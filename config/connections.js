@@ -66,7 +66,7 @@ module.exports.connections = {
 
   myMongoLab: {
     adapter: 'sails-mongo',
-    url: 'mongodb://aritiuser:aritiuser1!@ds041484.mongolab.com:41484/ariti'
+    url: 'mongodb://user:password@ds041484.mongolab.com:41484/dbname'
   },
 
   /***************************************************************************
