@@ -31,10 +31,6 @@ module.exports.connections = {
   localDiskDb: {
     adapter: 'sails-disk' /**/
   },
-  analocalDiskDb: {
-    adapter: 'sails-disk' /**/
-  },
-
   /***************************************************************************
   *                                                                          *
   * MySQL is the world's most popular relational database.                   *
@@ -66,6 +62,11 @@ module.exports.connections = {
     user: '',
     password: '',
     database: 'journal'
+  },
+
+  myMongoLab: {
+    adapter: 'sails-mongo',
+    url: 'mongodb://aritiuser:aritiuser1!@ds041484.mongolab.com:41484/ariti'
   },
 
   /***************************************************************************
