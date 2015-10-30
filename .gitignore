@@ -39,12 +39,6 @@
 #
 ################################################
 
-config/local.js
-config/globals.js
-config/bootstrap.js
-
-
-
 
 ################################################
 # Dependencies
@@ -117,3 +111,8 @@ npm-debug.log
 nbproject
 .idea
 .node_history
+
+
+config/connections.js
+config/local.js
+config/globals.js
