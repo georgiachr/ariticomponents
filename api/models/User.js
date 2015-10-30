@@ -6,8 +6,8 @@
 */
 
 
-// We don't want to store password with out encryption
-var bcrypt = require('bcrypt');
+// We don't want to store password without encryption
+//var bcrypt = require('bcrypt');
 
 
 module.exports = {
@@ -25,6 +25,12 @@ module.exports = {
 
     // The user's fullname
     name: {
+      type: 'string',
+      required: true
+    },
+
+    // The user's surname
+    surname: {
       type: 'string',
       required: true
     },
@@ -79,16 +85,23 @@ module.exports = {
     role: {
       type: 'string',
       defaultsTo: 'login-user'
+
     },
 
     // url for gravatar
     gravatarUrl: {
       type: 'string'
+      //defaultsTo: '/images/user-avatar.jpg'
     },
 
     // token
     token: {
       type: 'string'
+    },
+
+    cars:{
+      collection: 'car',
+      via: 'owner'
     }
 
 
@@ -101,9 +114,9 @@ module.exports = {
     var obj = this.toObject();
     delete obj.encryptedPassword;
     return obj;
-  },
+  }
 
-  comparePassword: function (password, user, cb) {
+  /*comparePassword: function (password, user, cb) {
     bcrypt.compare(password, user.encryptedPassword, function (err, match) {
 
       if (err) cb(err);
@@ -113,7 +126,7 @@ module.exports = {
         cb(err);
       }
     })
-  }
+  }*/
 
 };
 

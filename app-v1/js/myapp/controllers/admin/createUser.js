@@ -10,7 +10,6 @@ myApp
     console.log("Controller CreateUsersCtrl called!");
 
 
-
     /* ================================= DECLARATIONS ================================= */
 
     /**
@@ -36,6 +35,20 @@ myApp
 
     };
 
+    $scope.resetForm = function(){
+
+      $scope.addUserForm.loading = false;
+
+      $scope.addUserForm.name = "";
+      $scope.addUserForm.email = "";
+      $scope.addUserForm.password = "";
+      $scope.addUserForm.surname = "";
+      $scope.addUserForm.avatar = "";
+      $scope.addUserForm.cars = "";
+
+
+    }();
+
     $scope.printUserRole = function() {
       return $scope.addUserForm.title;
     };
@@ -55,13 +68,14 @@ myApp
       $scope.addUserForm.loading = true;
       //console.log($scope.signupForm.name, $scope.signupForm.title, $scope.signupForm.email, $scope.signupForm.password);
 
-      /*TODO: rename signup to add */
       $http.post('/adduser', {
         requestedUserRole: $scope.useridentity.userRole,
         name: $scope.addUserForm.name,
+        surname: $scope.addUserForm.surname,
         title: $scope.addUserForm.title,
         email: $scope.addUserForm.email,
-        password: $scope.addUserForm.password
+        password: $scope.addUserForm.password,
+        arrayOfCars: ($scope.addUserForm.cars).split(" ")
       })
 
         /**
@@ -69,6 +83,9 @@ myApp
          * Notify user on success
          */
         .then(function onSuccess(sailsResponse){
+
+          /*Populate Cars*/
+          /*TODO : populate cars here */
 
           /**
            * Action success
@@ -78,9 +95,8 @@ myApp
             return;
           }
 
-          //reset everything
-          //maybe show list of users here
-
+          //reset everything on success
+          $scope.resetForm();
 
         })
 
@@ -132,8 +148,18 @@ myApp
           }
         })
         .finally(function eitherWay() {
-          $scope.addUserForm.loading = false;
+          $scope.resetForm();
         })
+    };
+
+    $scope.uploadAvatarImage = function(avatarFile){
+
+      var stringurl = "/images/"+avatarFile;
+
+      console.log("image string is"+stringurl);
+
+
+
     };
 
 

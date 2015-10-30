@@ -42,6 +42,7 @@ This presents a table of users
             <th class="center">Full Name </th>
             <th class="center">Email</th>
             <th class="center">User Role</th>
+            <th class="center">Cars</th>
             <th ></th>
           </tr>
         </thead>
@@ -58,21 +59,27 @@ This presents a table of users
 
           <!-- Full Name -->
           <td title="FullName">
-                      <span editable-text="user.name" e-name="name" e-form="rowform" e-required >
-                        {{ user.name  }}
-                      </span>
+            <span editable-text="user.name" e-name="name" e-form="rowform" e-required >
+              {{ user.name  }}
+            </span>
           </td>
 
           <!-- Email -->
           <td title='Email' >
-                      <span editable-text="user.email" e-name="email" e-form="rowform" e-required>
-                        {{ user.email}}
-                      </span>
+            <span editable-text="user.email" e-name="email" e-form="rowform" e-required>
+              {{ user.email}}
+            </span>
           </td>
 
           <!-- User Role -->
           <td title='Role' >
             {{user.title}}
+          </td>
+
+          <!-- User Cars -->
+          <td title='Cars' >
+            <!-- one to many association -->
+            {{user.cars['number']}}
           </td>
 
           <td> <!-- form -->

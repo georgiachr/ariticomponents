@@ -187,21 +187,7 @@ myApp
 
     };
 
-    /**
-     * Remove user from the list:
-     * A. Removes user from Database (calls the removeUserFromDb )
-     * B. Removes user from List (deletes data in userList[index] )
-     * @param index : the array position of the user to be deleted
-     */
-    $scope.removeUser = function(index) {
 
-      /* Removes user from the database using HTTP POST */
-      $scope.removeUserFromDb(index);
-
-      /* update scope list - ANGULAR remove user in index */
-      $scope.userListFromServer.splice(index,1);
-
-    };
 
 
     /**
@@ -293,7 +279,7 @@ myApp
 
       $http.post('/removeuser', {
         requestedUserRole: $scope.useridentity.userRole,
-        id: $scope.displayedUserList[index].id
+        id: $scope.userListFromServer[index].id
       })
 
       /**
@@ -362,6 +348,22 @@ myApp
         .finally(function eitherWay() {
 
         })
+    };
+
+    /**
+     * Remove user from the list:
+     * A. Removes user from Database (calls the removeUserFromDb )
+     * B. Removes user from List (deletes data in userList[index] )
+     * @param index : the array position of the user to be deleted
+     */
+      $scope.removeUser = function(index) {
+
+      /* Removes user from the database using HTTP POST */
+      $scope.removeUserFromDb(index);
+
+      /* update scope list - ANGULAR remove user in index */
+      $scope.userListFromServer.splice(index,1);
+
     };
 
     /**

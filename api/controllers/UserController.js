@@ -675,7 +675,7 @@ module.exports = {
 
         console.log(textForSearch);
         //User.find().limit(pagesize).skip(skipcount).exec({
-        User.find(likewithpaginationObject).exec({
+        User.find(likewithpaginationObject).populate('cars').exec({
 
           error: function (err) {
             return res.negotiate(err);
@@ -698,6 +698,7 @@ module.exports = {
                   name: user.name,
                   email: user.email,
                   title: user.title,
+                  cars: user.cars[0], //TODO: iterate through the array
                   gravatarUrl: user.gravatarUrl,
                   //admin: user.admin,
                   lastLoggedIn: user.lastLoggedIn,
@@ -753,17 +754,14 @@ module.exports = {
       }
 
 
-
     });
   },
-
-
 
 
   /**
    * Update a user account.
    * Update only user's name and user's email
-   * adduser action's policies: isTokenAuthorized, isAdmin
+   * updateuser action's policies: isTokenAuthorized, isAdmin
    *
    */
   updateUser: function(req, res) {
@@ -880,6 +878,7 @@ module.exports = {
                 // the addUserForm
                 User.create({
                   name: req.param('name'),
+                  surname: req.param('surname'),
                   title: req.param('title'),
                   email: req.param('email'),
                   encryptedPassword: encryptedPassword,
@@ -899,6 +898,33 @@ module.exports = {
                     return res.negotiate(err);
                   }
 
+                  //req.param('cars') is an array of CAR numbers
+                  var carList = req.param('arrayOfCars');
+                    for(i=0;i<carList.length;i++) {
+                      Car.create({
+                        number: carList[i],
+                        owner: newUser.id
+                      })
+                        .then(function (cars) {
+                          // Then we can associate the cars with the user.
+                          newUser.cars = [cars];
+
+                          // And save the user.
+                          return newUser.save();
+                        })
+                        .then(function () {
+                          // And now we want to get the new user back,
+                          // and populate the cars the user might own.
+                          return newUser.populate('cars');
+                        })
+                        .then(
+                        console.log
+                      )
+                        .catch(
+                        console.error
+                      );
+
+                    }
 
                   // Let other subscribed sockets know that the user was created.
                   /*User.publishCreate({
