@@ -57,7 +57,7 @@ module.exports = {
 
     lastActive: {
       type: 'date',
-      required: true,
+      required: false,
       defaultsTo: new Date(0)
     },
 
@@ -65,7 +65,7 @@ module.exports = {
     // (i.e. sent a username and password to the server)
     lastLoggedIn: {
       type: 'date',
-      required: true,
+      required: false,
       defaultsTo: new Date(0)
     },
 

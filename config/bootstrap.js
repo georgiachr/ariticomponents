@@ -17,6 +17,7 @@ module.exports.bootstrap = function(cb) {
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
   sails.config.version = package.version;
 
+
   var Passwords = require('machinepack-passwords');
 
 // Encrypt a string using the BCrypt algorithm.
@@ -29,14 +30,14 @@ module.exports.bootstrap = function(cb) {
     },
 // OK.
     success: function (result){
-      User.findOrCreate(
-        // Search for user with "admin" flag
-        {admin: true},
 
-        // Create one if no such user is found
-        {admin: true, encryptedPassword: result, title: 'Administrator', name: 'Georgia Christodoulou', email: 'g@g.com'}
-      ).exec(cb);
+      User.findOrCreate(
+        {admin: true},
+        {admin: true, encryptedPassword: result, title: 'Administrator', name: 'Georgia', surname:'Christodoulou', email: 'g@g.com'}
+      ).exec(function(err,record){
+          sails.log.warn(err);
+          cb();
+        });
     }
   });
-    //cb();
 };
