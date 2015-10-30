@@ -9,7 +9,7 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
-var package = require("../package.json");
+var package = require("../../../package.json");
 
 module.exports.bootstrap = function(cb) {
 
@@ -31,9 +31,10 @@ module.exports.bootstrap = function(cb) {
 // OK.
     success: function (result){
 
+
       User.findOrCreate(
         {admin: true},
-        {admin: true, encryptedPassword: result, title: 'Administrator', name: 'Georgia', surname:'Christodoulou', email: 'g@g.com'}
+        {admin: true, encryptedPassword: result, title: 'Administrator', name: 'Georgia', surname:'Chr', email: 'v@v.com'}
       ).exec(function(err,record){
           sails.log.warn(err);
           cb();

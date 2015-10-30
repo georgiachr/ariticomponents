@@ -90,8 +90,8 @@ lib-cov
 *.seed
 *.log
 *.out
-/config/connections.js
-/config/globals.js
+/config/env/development/connections.js
+/config/env/development/globals.js
 
 *.pid
 npm-debug.log
