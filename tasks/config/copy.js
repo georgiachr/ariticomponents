@@ -38,7 +38,7 @@ module.exports = function(grunt) {
                       'angular-toastr/dist/angular-toastr.tpls.js','angular-bootstrap/ui-bootstrap-tpls.js',
                       // other components
                       'angular-xeditable/dist/js/xeditable.min.js', 'angular-toastr/dist/angular-toastr.js','angular-bootstrap-dropdown/dist/bsDropdown.min.js',
-                      'angular-smart-table/dist/smart-table.js'
+                      'angular-smart-table/dist/smart-table.js','ng-file-upload/ng-file-upload.min.js'
 
                     ],
                     flatten: true,

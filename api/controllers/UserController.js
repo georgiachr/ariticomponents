@@ -13,7 +13,8 @@ module.exports = {
    * to use its built-in blueprint action.  We're overriding that here to pass
    * down additional information.
    */
-  destroy: function (req, res) {
+
+  /*destroy: function (req, res) {
 
     if (!req.param('id')){
       return res.badRequest('id is a required parameter.');
@@ -42,8 +43,14 @@ module.exports = {
 
       return res.ok();
     });
-  },
+  },*/
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {*}
+   */
   removeUser: function (req, res) {
 
     if (!req.param('id')){
@@ -53,23 +60,21 @@ module.exports = {
     User.destroy({
       id: req.param('id')
     }).exec(function (err, usersDestroyed){
-      if (err) return res.negotiate(err);
+      if (err)
+        return res.negotiate(err);
+
       if (usersDestroyed.length === 0) {
         return res.notFound();
       }
 
       // Let everyone who's subscribed know that this user is deleted.
+      /*
       User.publishDestroy(req.param('id'), undefined, {
         previous: {
           name: usersDestroyed[0].name
         }
       });
-
-      // Unsubscribe all the sockets (e.g. browser tabs) who are currently
-      // subscribed to this particular user.
-      _.each(User.subscribers(usersDestroyed[0]), function(socket) {
-        User.unsubscribe(socket, usersDestroyed[0]);
-      });
+      */
 
       return res.ok();
     });
@@ -125,8 +130,6 @@ module.exports = {
 
     }); //</User.findOne()>
   },
-
-
 
 
   /**
@@ -673,7 +676,7 @@ module.exports = {
       success: function (num) {
         usercount = num;
 
-        console.log(textForSearch);
+        //console.log(textForSearch);
         //User.find().limit(pagesize).skip(skipcount).exec({
         User.find(likewithpaginationObject).populate('cars').exec({
 
@@ -698,7 +701,7 @@ module.exports = {
                   name: user.name,
                   email: user.email,
                   title: user.title,
-                  cars: user.cars[0], //TODO: iterate through the array
+                  //cars: user.cars[0],
                   gravatarUrl: user.gravatarUrl,
                   //admin: user.admin,
                   lastLoggedIn: user.lastLoggedIn,
@@ -814,24 +817,12 @@ module.exports = {
       User.update(req.param('id'), attributeValsToSet).exec(function (err){
         if (err) return res.negotiate(err);
 
-        // Let all connected sockets who were allowed to subscribe to this user
-        // record know that there has been a change.
-        User.publishUpdate(req.param('id'), {
-          name: attributeValsToSet.name,
-          email: attributeValsToSet.email,
-          title: attributeValsToSet.title,
-          admin: attributeValsToSet.admin,
-          gravatarUrl: attributeValsToSet.gravatarUrl
-        });
-
         return res.ok();
       });
     });
 
   },
 
-
-//////////////////////
 
   /**
    * Create a new user account.
@@ -899,7 +890,7 @@ module.exports = {
                   }
 
                   //req.param('cars') is an array of CAR numbers
-                  var carList = req.param('arrayOfCars');
+                  /*var carList = req.param('arrayOfCars');
                     for(i=0;i<carList.length;i++) {
                       Car.create({
                         number: carList[i],
@@ -924,7 +915,9 @@ module.exports = {
                         console.error
                       );
 
-                    }
+                    }*/
+
+
 
                   // Let other subscribed sockets know that the user was created.
                   /*User.publishCreate({

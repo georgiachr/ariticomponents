@@ -59,6 +59,8 @@ module.exports.routes = {
   'POST /adduser': 'UserController.adduser',
   'POST /updateuser': 'UserController.updateuser',
   'POST /removeuser': 'UserController.removeuser',
+  'POST /uploadavatar': 'FileController.uploadavatar',
+  'GET /downloadfile': 'FileController.downloadfile',
   'PUT /login': 'UserController.login',
   'GET /userlist': 'UserController.userlist',
   '/logout': 'UserController.logout',

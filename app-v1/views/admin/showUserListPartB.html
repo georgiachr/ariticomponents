@@ -42,7 +42,6 @@ This presents a table of users
             <th class="center">Full Name </th>
             <th class="center">Email</th>
             <th class="center">User Role</th>
-            <th class="center">Cars</th>
             <th ></th>
           </tr>
         </thead>
@@ -51,10 +50,14 @@ This presents a table of users
         <tbody>
         <tr ng-repeat="user in userListFromServer">
 
-
           <!-- Photo -->
           <td title="Photo">
+            <!-- canvas for dynamic image creation -->
+            <canvas id="userAvatar" width="200" height="100" style="border:1px solid #000000;">
+            </canvas>
+            <!-- cannot use image
             <img ng-src="user.gravatarUrl" class="img-responsive" style="display: block; margin-left: auto; margin-right: auto">
+            -->
           </td>
 
           <!-- Full Name -->
@@ -77,10 +80,13 @@ This presents a table of users
           </td>
 
           <!-- User Cars -->
+          <!--
           <td title='Cars' >
-            <!-- one to many association -->
+             one to many association
             {{user.cars['number']}}
           </td>
+          -->
+
 
           <td> <!-- form -->
 

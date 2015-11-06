@@ -102,8 +102,11 @@ module.exports = {
     cars:{
       collection: 'car',
       via: 'owner'
-    }
+    },
 
+    avatar:{
+      model: 'file'
+    }
 
   },
 

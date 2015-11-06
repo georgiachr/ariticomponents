@@ -60,7 +60,10 @@ module.exports.policies = {
     'userList': ['isAdmin'],
     'updateUser': ['isAdmin'],
     'destroy': ['isAdmin']
+  },
 
+  'FileController': {
+    //'uploadAvatar': ['isAdmin']
   }
 
   /*

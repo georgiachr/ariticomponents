@@ -3,7 +3,7 @@
  */
 
 myApp
-  .controller('CreateUserCtrl', ['$rootScope', '$scope', '$http', '$modal', 'toastr', 'useridentity', function($rootScope, $scope, $http, $modal, toastr, useridentity){
+  .controller('CreateUserCtrl', ['$rootScope', '$scope', '$http', '$modal', 'toastr', 'Upload','useridentity', function($rootScope, $scope, $http, $modal, toastr, Upload, useridentity){
 
     /* ================================= DEBUGGING ================================= */
 
@@ -38,7 +38,6 @@ myApp
     $scope.resetForm = function(){
 
       $scope.addUserForm.loading = false;
-
       $scope.addUserForm.name = "";
       $scope.addUserForm.email = "";
       $scope.addUserForm.password = "";
@@ -46,16 +45,14 @@ myApp
       $scope.addUserForm.avatar = "";
       $scope.addUserForm.cars = "";
 
+    };
 
-    }();
+    $scope.resetForm();
 
     $scope.printUserRole = function() {
       return $scope.addUserForm.title;
     };
 
-    $scope.la = function() {
-      //console.log("addUserForm.role = " + $scope.role);
-    };
 
 
     /**
@@ -74,29 +71,33 @@ myApp
         surname: $scope.addUserForm.surname,
         title: $scope.addUserForm.title,
         email: $scope.addUserForm.email,
-        password: $scope.addUserForm.password,
-        arrayOfCars: ($scope.addUserForm.cars).split(" ")
+        password: $scope.addUserForm.password
+        //arrayOfCars: ($scope.addUserForm.cars).split(" ")
       })
 
         /**
          * THEN
          * Notify user on success
          */
-        .then(function onSuccess(sailsResponse){
-
-          /*Populate Cars*/
-          /*TODO : populate cars here */
+        .then(function addUserSuccess(sailsResponse){
 
           /**
            * Action success
            */
           if (sailsResponse.status === 200) {
             toastr.success('The user was successfully created.', 'Success');
-            return;
           }
 
+          /**
+           * upload avatar image
+           */
+          if ($scope.addUserForm.avatar) {
+            $scope.uploadAvatar($scope.addUserForm.avatar, sailsResponse['id']);
+          }
+
+
           //reset everything on success
-          $scope.resetForm();
+          //$scope.resetForm();
 
         })
 
@@ -148,19 +149,73 @@ myApp
           }
         })
         .finally(function eitherWay() {
-          $scope.resetForm();
+
+          $timeout(function () {
+            $scope.resetForm();
+          }, 1500);
+
         })
     };
 
-    $scope.uploadAvatarImage = function(avatarFile){
 
-      var stringurl = "/images/"+avatarFile;
+    /**
+     * upload user's avatar
+     * @param file
+     * @param userid
+     */
+    uploadAvatar = function (file,userid,ax){
 
-      console.log("image string is"+stringurl);
-
-
+      Upload.upload({
+        url: '/uploadAvatar',
+        method: 'POST',
+        data: {filename: file.name, id: userid, requestedUserRole: ax},
+        file: file,
+        headers: {"X-Auth-Token":useridentity.userToken}
+      })
+        /*
+        .success( function uploadAvatarSuccess (resp) {
+          // file is uploaded successfully
+          console.log('Upload Avatar: Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+        })
+        .error( function uploadAvatarError (resp) {
+          // file is uploaded successfully
+          console.log('Upload avatar: Error: '+resp);
+          toastr.error('Upload avatar failed: '+resp.toString(), 'Error');
+        })
+        .catch( function uploadAvatarException (resp) {
+          // file is uploaded successfully
+          console.log('Upload avatar: Exception: '+resp);
+          //toastr.error('Upload avatar exception: '+resp.toString(), 'Error');
+        })
+        .progress(function uploadAvatarProgress (evt) {
+          console.log('progress');
+          //console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ evt.config.data.file.name);
+        });
+        */
+    .then(function onSuccess (resp) {
+      console.log('Success');
+    },function onError (resp) {
+      console.log('Error status: ' + resp.status);
+    }, function onEvent (evt) {
+      var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+      console.log('File Progress: ');// + progressPercentage + '% ' + evt.config.data.file.name);
+    });
 
     };
+
+    /**
+     * if Files then [Object File] else Object File
+     * @param file
+     */
+    $scope.saveAvatarToVariable = function (file){
+      //[Object File]
+      //Properties: name, size,
+      $scope.addUserForm.avatar = file;
+
+      uploadAvatar(file,"5639d1dc2f15e37c47ec3e83","Administrator");
+
+    };
+
 
 
     /* ================================= WATCHES ================================= */

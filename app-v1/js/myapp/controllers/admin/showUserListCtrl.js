@@ -9,8 +9,6 @@ myApp
 
     console.log("Controller ShowListOfUsersCtrl called!");
 
-
-
     /* ================================= DECLARATIONS ================================= */
 
     /**
@@ -101,7 +99,6 @@ myApp
           $scope.paginationTotalItems = dataReceived['totalNumberOfUsers'];
 
           $scope.calculateTotalNumberOfPagesForPagination($scope.paginationTotalItems);
-
 
 
           //$timeout(function(){$scope.itemsByPage = 8},100);
@@ -213,7 +210,7 @@ myApp
            * Action success
            */
           if (sailsResponse.status === 200) {
-            toastr.success('The user was successfully saved.', 'Success');
+            toastr.success('The user was successfully updated.', 'Success');
             return;
           }
 
@@ -225,46 +222,9 @@ myApp
        */
         .catch(function onError(sailsResponse) {
 
-          // If using sails-disk adpater -- Handle Duplicate Key
-          //var emailAddressAlreadyInUse = sailsResponse.status == 409;
+          toastr.error('Failed to update user:'+sailsResponse.toString(), 'Error');
+          return;
 
-          /**
-           * 1. Email Address already in use
-           */
-          if (sailsResponse.status === 409) {
-            //console.log("That email address has already been taken, please try again");
-            toastr.error('That email address has already been taken, please try again.', 'Error');
-            return;
-          }
-          /**
-           * 2. This action is forbidden
-           */
-          else if (sailsResponse.status === 403) {
-            //console.log("You are not allowed to perform this action, please try again");
-            toastr.error('You are not allowed to perform this action, please try again.', 'Error');
-            return;
-          }
-          /**
-           * 3. Server Error
-           */
-          else if (sailsResponse.status === 500) {
-            toastr.error('Unexpected error, please try again later.', 'Error');
-            return;
-          }
-          /**
-           * 4. Bad Request
-           */
-          else if (sailsResponse.status === 400) {
-            toastr.error('Please fill the form properly.', 'Error');
-            return;
-          }
-          /**
-           *
-           */
-          else {
-            toastr.error('Something BAD happened:'+sailsResponse.toString(), 'Error');
-            return;
-          }
         })
         .finally(function eitherWay() {
 
@@ -304,46 +264,9 @@ myApp
        */
         .catch(function onError(sailsResponse) {
 
-          // If using sails-disk adpater -- Handle Duplicate Key
-          //var emailAddressAlreadyInUse = sailsResponse.status == 409;
+          toastr.error('Failed to remove user:'+sailsResponse.toString(), 'Error');
+          return;
 
-          /**
-           * 1. Email Address already in use
-           */
-          if (sailsResponse.status === 409) {
-            //console.log("That email address has already been taken, please try again");
-            toastr.error('That email address has already been taken, please try again.', 'Error');
-            return;
-          }
-          /**
-           * 2. This action is forbidden
-           */
-          else if (sailsResponse.status === 403) {
-            //console.log("You are not allowed to perform this action, please try again");
-            toastr.error('You are not allowed to perform this action, please try again.', 'Error');
-            return;
-          }
-          /**
-           * 3. Server Error
-           */
-          else if (sailsResponse.status === 500) {
-            toastr.error('Unexpected error, please try again later.', 'Error');
-            return;
-          }
-          /**
-           * 4. Bad Request
-           */
-          else if (sailsResponse.status === 400) {
-            toastr.error('Please fill the form properly.', 'Error');
-            return;
-          }
-          /**
-           *
-           */
-          else {
-            toastr.error('Something BAD happened:'+sailsResponse.toString(), 'Error');
-            return;
-          }
         })
         .finally(function eitherWay() {
 
@@ -361,7 +284,7 @@ myApp
       /* Removes user from the database using HTTP POST */
       $scope.removeUserFromDb(index);
 
-      /* update scope list - ANGULAR remove user in index */
+      /* update scope list - ANGULAR remove the user in index position */
       $scope.userListFromServer.splice(index,1);
 
     };
@@ -378,9 +301,6 @@ myApp
       return $resource('/userlist', {}, {
         query: {method:'GET', params:{requestedUserRole: '$scope.useridentity.userRole'}, config:{}}
       });
-
-
-
 
 
       var deferred = $q.defer();
@@ -403,6 +323,13 @@ myApp
 
 
       return deferred.promise;
+    };
+
+    $scope.drawUserAvatar = function(){
+      var c = document.getElementById("userAvatar");
+      var ctx = c.getContext("2d");
+      var img = document.getElementById("scream");
+      ctx.drawImage(img,10,10);
     };
 
 

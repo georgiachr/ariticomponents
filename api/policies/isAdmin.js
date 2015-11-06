@@ -5,8 +5,7 @@
 //TODO: change title to role
 module.exports = function (req, res, next) {
 
-  var userRole = req.param('requestedUserRole');
-
+  var userRole = (req.param('requestedUserRole'));
 
   if ( userRole != 'Administrator')
   {
@@ -16,4 +15,5 @@ module.exports = function (req, res, next) {
   };
 
   next();
+
 }

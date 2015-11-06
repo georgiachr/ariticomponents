@@ -82,9 +82,24 @@
           <br>
 
           <div class="form-group">
-            <label class="col-md-4 control-label" for="filebutton"></label>
+
+            <label class="col-md-4 control-label" for="avatarbutton"></label>
+
             <div class="col-md-4">
-              <input id="filebutton" name="useravatar" class="input-file" type="file" onchange="angular.element(this).scope().uploadAvatarImage(this.files)" ng-model="addUserForm.avatar">
+              <!--
+              <div class="button" ngf-select="saveAvatarToVariable($file)" ng-model="addUserForm.avatar" name="file" ngf-pattern="'image/*'"
+                   accept="image/*" ngf-max-size="20MB" ngf-min-height="100"
+                   ngf-resize="{width: 100, height: 100}">Select</div>
+              -->
+              <input accept="image/*"
+                     id="avatarbutton"
+                     name="useravatar"
+                     type="file"
+                     class="input-file"
+                     ng-model="addUserForm.avatar"
+                     ngf-max-height="1000"
+                     ngf-max-size="1MB"
+                     ngf-select="saveAvatarToVariable($file)">
             </div>
           </div>
 
@@ -115,12 +130,14 @@
           </div>
 
           <!-- User's cars -->
+          <!--
           <div class="form-group">
             <label class="col-md-2 col-lg-2 control-label" >Cars<span style="color: red"> *</span></label>
               <div class="col-md-8 col-lg-8 ">
                 <input class="form-control" id="cars" name="cars" ng-model="addUserForm.cars">
               </div>
           </div>
+          -->
 
 
           <!-- Comments -->
