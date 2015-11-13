@@ -35,10 +35,37 @@ myApp
     //other variables
     $scope.isLoading = false;
 
+
+    ///////////////////////////////////////////////////////////////
+    function setInMemoryURL(data){
+
+      /*
+       var urlCreator = window.URL || window.webkitURL;
+       var img = document.querySelector( "#animg" );
+       */
+      $scope.inMemoryURL = 'data:image/png;base64,'+data;
+    }
+
+    $scope.acceptSelect = true;
+
+    /**
+     * Image file raw data
+     */
+    $scope.image;
+
+    /**
+     * in memory URL
+     * @param file
+     */
+    $scope.inMemoryURL;
+
+
+
+
     /* ================================= FUNCTIONS ================================= */
     /* Keep in mind the ORDER functions are called */
 
-      /**
+    /**
      * Used for PAGINATION issues
      * Calculate the total number of pages based on the number of items and the paginationItemsByPage
      * The $scope.paginationTotalPages variable is initialized
@@ -46,8 +73,8 @@ myApp
      */
     $scope.calculateTotalNumberOfPagesForPagination = function (numberOfTotalItemsRetrievedFromDb){
 
-        $scope.paginationTotalPages = Math.ceil(numberOfTotalItemsRetrievedFromDb / $scope.paginationNumberOfItemsByPage);
-        $scope.paginationTotalItems = numberOfTotalItemsRetrievedFromDb;
+      $scope.paginationTotalPages = Math.ceil(numberOfTotalItemsRetrievedFromDb / $scope.paginationNumberOfItemsByPage);
+      $scope.paginationTotalItems = numberOfTotalItemsRetrievedFromDb;
 
     };
 
@@ -99,6 +126,10 @@ myApp
           $scope.paginationTotalItems = dataReceived['totalNumberOfUsers'];
 
           $scope.calculateTotalNumberOfPagesForPagination($scope.paginationTotalItems);
+
+          $scope.image = dataReceived[1].file.data;
+          setInMemoryURL(base64ArrayBuffer(dataReceived[1].file.data));
+
 
 
           //$timeout(function(){$scope.itemsByPage = 8},100);
@@ -279,7 +310,7 @@ myApp
      * B. Removes user from List (deletes data in userList[index] )
      * @param index : the array position of the user to be deleted
      */
-      $scope.removeUser = function(index) {
+    $scope.removeUser = function(index) {
 
       /* Removes user from the database using HTTP POST */
       $scope.removeUserFromDb(index);
@@ -325,12 +356,6 @@ myApp
       return deferred.promise;
     };
 
-    $scope.drawUserAvatar = function(){
-      var c = document.getElementById("userAvatar");
-      var ctx = c.getContext("2d");
-      var img = document.getElementById("scream");
-      ctx.drawImage(img,10,10);
-    };
 
 
     /* ================================= WATCHES ================================= */

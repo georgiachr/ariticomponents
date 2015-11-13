@@ -75,10 +75,10 @@ myApp
         //arrayOfCars: ($scope.addUserForm.cars).split(" ")
       })
 
-        /**
-         * THEN
-         * Notify user on success
-         */
+      /**
+       * THEN
+       * Notify user on success
+       */
         .then(function addUserSuccess(sailsResponse){
 
           /**
@@ -101,10 +101,10 @@ myApp
 
         })
 
-        /**
-         * CATCH
-         * Handle known error types
-         */
+      /**
+       * CATCH
+       * Handle known error types
+       */
         .catch(function onError(sailsResponse) {
 
           // If using sails-disk adpater -- Handle Duplicate Key
@@ -169,37 +169,37 @@ myApp
         url: '/uploadAvatar',
         method: 'POST',
         data: {filename: file.name, id: userid, requestedUserRole: ax},
-        file: file,
-        headers: {"X-Auth-Token":useridentity.userToken}
+        headers: {"X-Auth-Token": $scope.useridentity.userToken},
+        file: file //note that "file" should be the last parameter
       })
         /*
-        .success( function uploadAvatarSuccess (resp) {
-          // file is uploaded successfully
-          console.log('Upload Avatar: Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-        })
-        .error( function uploadAvatarError (resp) {
-          // file is uploaded successfully
-          console.log('Upload avatar: Error: '+resp);
-          toastr.error('Upload avatar failed: '+resp.toString(), 'Error');
-        })
-        .catch( function uploadAvatarException (resp) {
-          // file is uploaded successfully
-          console.log('Upload avatar: Exception: '+resp);
-          //toastr.error('Upload avatar exception: '+resp.toString(), 'Error');
-        })
-        .progress(function uploadAvatarProgress (evt) {
-          console.log('progress');
-          //console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ evt.config.data.file.name);
+         .success( function uploadAvatarSuccess (resp) {
+         // file is uploaded successfully
+         console.log('Upload Avatar: Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+         })
+         .error( function uploadAvatarError (resp) {
+         // file is uploaded successfully
+         console.log('Upload avatar: Error: '+resp);
+         toastr.error('Upload avatar failed: '+resp.toString(), 'Error');
+         })
+         .catch( function uploadAvatarException (resp) {
+         // file is uploaded successfully
+         console.log('Upload avatar: Exception: '+resp);
+         //toastr.error('Upload avatar exception: '+resp.toString(), 'Error');
+         })
+         .progress(function uploadAvatarProgress (evt) {
+         console.log('progress');
+         //console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ evt.config.data.file.name);
+         });
+         */
+        .then(function onSuccess (resp) {
+          console.log('Success');
+        },function onError (resp) {
+          console.log('Error status: ' + resp.status);
+        }, function onEvent (evt) {
+          var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+          console.log('File Progress: ');// + progressPercentage + '% ' + evt.config.data.file.name);
         });
-        */
-    .then(function onSuccess (resp) {
-      console.log('Success');
-    },function onError (resp) {
-      console.log('Error status: ' + resp.status);
-    }, function onEvent (evt) {
-      var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-      console.log('File Progress: ');// + progressPercentage + '% ' + evt.config.data.file.name);
-    });
 
     };
 

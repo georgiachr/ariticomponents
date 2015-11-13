@@ -5,17 +5,19 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-
+/******** DECLARATIONS *********/
 /**
- * Utility functions
+ *
+ * @type {exports}
  */
+var sid = require('shortid');
+var fs = require('fs');
 
+
+/********** FUNCTIONS ***********/
 function getFileExtension(fileName) {
   return fileName.split('.').slice(-1);
 }
-
-var sid = require('shortid');
-
 
 module.exports = {
 
@@ -26,11 +28,6 @@ module.exports = {
    * @param res
    */
   uploadAvatar: function(req, res) {
-
-    console.log("uploadAvatar");
-    sails.log.warn("uploadAvatar");
-    sails.log.info("uploadAvatar");
-
 
     /***** D E C L A R A T I O N *****/
     var realFileName = null;
@@ -43,9 +40,13 @@ module.exports = {
 
     // prepare the new file (generate new name, find type)
     try{
-        fileToUpload = req.file('file');
-        realFileName = req.body['filename'];
-        fileOwnersId = req.body['id'];
+      fileToUpload = req.file('file');
+      realFileName = req.body['filename'];
+      fileOwnersId = req.body['id'];
+
+      console.log("req.params.all() = " + JSON.stringify(req.params.all()));
+      console.log("req.params[filename] = " + JSON.stringify(req.param('filename')));
+      console.log("req.body = " + JSON.stringify(req.body));
 
     }catch(err) {
       var errorString = "Cannot get file and other request parameters: ";
@@ -96,94 +97,94 @@ module.exports = {
     /***** V A L I D A T I O N S *****/
     //TODO : validations
     /*
-    try{
-      req.validate({
-        name: 'string',
-        id: 'string'
-      });
-    }catch(err){
-      console.log(JSON.stringify(err));
-      return res.send(400, err);
-    }
-  */
+     try{
+     req.validate({
+     name: 'string',
+     id: 'string'
+     });
+     }catch(err){
+     console.log(JSON.stringify(err));
+     return res.send(400, err);
+     }
+     */
 
     /***** P R O C E S S I N G *****/
 
-    // 1. Save the file in the directory specified in globals.js
+      // 1. Save the file in the directory specified in globals.js
 
     fileToUpload.upload(
-    {
-      // see https://github.com/balderdashy/skipper for all the available attributes
-      saveAs: newfilename,
-      maxBytes: 10000000 // don't allow the total upload size to exceed ~10MB
-      //dirname: require('path').resolve(sails.config.appPath,sails.config.globals.dataPath)
-    }
-    ,function uploadAvatarFile (err, uploadedFile) {
-
-      if (err) {
-        return res.negotiate(err);
-      }
-
-      sails.log.warn(uploadedFile.length);
-
-      // If no files were uploaded, respond with an error.
-      if (uploadedFile.length === 0){
-        console.log('No file was uploaded');
-        return res.badRequest('No file was uploaded');
-      }
-      else
       {
-        sails.log.info("Create the new File in the DB");
-        //2. Create the new File in the DB
-        File.create(
+        // see https://github.com/balderdashy/skipper for all the available attributes
+        saveAs: newfilename,
+        dirname: "../../uploaded_images/",
+        maxBytes: 10000000 // don't allow the total upload size to exceed ~10MB
+        //dirname: require('path').resolve(sails.config.appPath,sails.config.globals.dataPath)
+      }
+      ,function uploadAvatarFile (err, uploadedFile) {
+
+        if (err) {
+          return res.negotiate(err);
+        }
+
+        sails.log.warn(uploadedFile.length);
+
+        // If no files were uploaded, respond with an error.
+        if (uploadedFile.length === 0){
+          console.log('No file was uploaded');
+          return res.badRequest('No file was uploaded');
+        }
+        else
         {
-          name: newfilename,
-          type: filetype,
-          userid: fileOwnersId //one to one association here
-        })
-          .exec({
+          sails.log.info("Create the new File in the DB");
+          //2. Create the new File in the DB
+          File.create(
+            {
+              name: newfilename,
+              type: filetype,
+              userid: fileOwnersId //one to one association here
+            })
+            .exec({
 
-            error: function FileCreateError (err) {
-              return res.negotiate(err);
-            },
+              error: function FileCreateError (err) {
+                return res.negotiate(err);
+              },
 
-            success: function FileCreateSuccess (newFile) {
+              success: function FileCreateSuccess (newFile) {
 
-              sails.log.info("Update user with the current file");
-              sails.log.info("newfiel = " + newFile.id);
+                sails.log.info("Update user with the current file");
+                sails.log.info("newfiel = " + newFile.id);
 
-              // 3. Update user with the current file
-              User.update(
-                {id: fileOwnersId}, //what to look for
-                {avatar: newFile.id} //what to update - it's the file's id (one to one association here)
-              )
-                .exec({
+                // 3. Update user with the current file
+                User.update(
+                  {id: fileOwnersId}, //what to look for
+                  {avatar: newFile.id} //what to update - it's the file's id (one to one association here)
+                )
+                  .exec({
 
-                  error: function updateUserError (err) {
-                    return res.negotiate(err);
-                  },
+                    error: function updateUserError (err) {
+                      return res.negotiate(err);
+                    },
 
-                  success: function updateUserSuccess (userFound) {
-                    //return res.ok();
+                    success: function updateUserSuccess (userFound) {
 
-                    return res.json(200);
+                      return res.json(200);
 
-                    // Send back
-                    /*
-                    return res.json(200,{
-                      id: newUser.id
-                    });
-                     */
+                      // Send back
+                      /*
+                       return res.json(200,{
+                       id: newUser.id
+                       });
+                       */
                     }
 
-                }); // User.find.exec
-            } //function FileCreateSuccess
-          }); //  File.create.exec
+                  }); // User.find.exec
+              } //function FileCreateSuccess
+            }); //  File.create.exec
 
-      } // else (uploadedFiles.length != 0)
+        } // else (uploadedFiles.length != 0)
 
-    } // uploadFileDone
-  ); // requestFile.upload(
+      } // uploadFileDone
+    ); // requestFile.upload(
 
   },
 
@@ -192,36 +193,46 @@ module.exports = {
    * @param req
    * @param res
    */
-  downloadFile: function(req, res) {
+  getAvatarFile: function(filename) {
 
+    //{"name":"uMDOT3Ox$.jpg","type":"jpg","userid":"5639d1dc2f15e37c47ec3e83","createdAt":"2015-11-06T12:50:49.560Z","updatedAt":"2015-11-06T12:50:49.560Z","id":"563ca229fbb23b501701e050"}
     req.validate({
       id: 'string'
     });
 
-    User.findOne(req.param('id')).exec(function (err, user){
-      if (err) return res.negotiate(err);
-      if (!user) return res.notFound();
+    var dir = ".tmp/uploads/";
+    var filepath = dir + filename;
+    /*
+     var options = {
+     root: sails.config.globals.upload_files,
+     dotfiles: 'deny',
+     headers: {
+     'x-timestamp': Date.now(),
+     'x-sent': true
+     }
+     };
+     */
 
-      // User has no avatar image uploaded.
-      // (should have never have hit this endpoint and used the default image)
-      if (!user.avatarFd) {
-        return res.notFound();
-      }
-
-      var SkipperDisk = require('skipper-disk');
-      var fileAdapter = SkipperDisk(/* optional opts */);
-
-      // Stream the file down
-      fileAdapter.read(user.avatarFd)
-        .on('error', function (err){
-          return res.serverError(err);
-        })
-        .pipe(res);
+    fs.readFile(filepath, function (err, data) {
+      if (err) throw err;
+      console.log(data);
+      return data;
     });
 
 
-  }
 
+    /*
+     res.sendfile(filename, options, function (err) {
+     if (err) {
+     console.log(err);
+     res.status(err.status).end();
+     }
+     else {
+     console.log('Sent:');
+     }
+     });
+     */
+  }
 
 };
 

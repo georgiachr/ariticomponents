@@ -1,9 +1,9 @@
 /**
-* User.js
-*
-* @description :: TODO: You might write a short summary of how this model works and what it represents here.
-* @docs        :: http://sailsjs.org/#!documentation/models
-*/
+ * User.js
+ *
+ * @description :: TODO: You might write a short summary of how this model works and what it represents here.
+ * @docs        :: http://sailsjs.org/#!documentation/models
+ */
 
 
 // We don't want to store password without encryption
@@ -120,16 +120,15 @@ module.exports = {
   }
 
   /*comparePassword: function (password, user, cb) {
-    bcrypt.compare(password, user.encryptedPassword, function (err, match) {
+   bcrypt.compare(password, user.encryptedPassword, function (err, match) {
 
-      if (err) cb(err);
-      if (match) {
-        cb(null, true);
-      } else {
-        cb(err);
-      }
-    })
-  }*/
+   if (err) cb(err);
+   if (match) {
+   cb(null, true);
+   } else {
+   cb(err);
+   }
+   })
+   }*/
 
 };
-

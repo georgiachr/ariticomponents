@@ -6,6 +6,58 @@
  *
  */
 
+var PNG = require("pngjs-image");
+var fs = require("fs");
+
+
+function getUserAvatarFile (avatarfileid)
+{
+  //var filename = sails.config.globals.upload_files + 'hoek.png';
+  var filename = "uploaded_images/";
+  var file;
+  //console.log('file id = '+avatarfileid);
+
+  File.findOne({id: avatarfileid})
+    .exec({
+
+      error: function (err) {
+        return res.negotiate(err);
+      },
+
+      success: function (foundfile) {
+
+        //console.log(JSON.stringify(foundfile));
+
+        //console.log(foundfile.name);
+
+        filename = filename + foundfile.name;
+
+
+        file = fs.readFileSync(filename);
+
+        try {
+          // use library PNGJS-IMAGE
+          // returns a png image object
+          PNG.loadImage(file, function (err, image) {
+            if (err)
+              sails.log.error(err);
+            // see https://www.npmjs.com/package/pngjs-image#instance-methods
+            // for documentation on instance => image actions
+
+            sails.log.info('Image width: '+image.getWidth()+' '+'Image height :'+image.getHeight());
+          });
+        }catch(ex){
+          console.log(ex);
+        }
+
+        return file;
+
+      }
+    });
+
+};
+
+
 module.exports = {
 
   /**
@@ -16,34 +68,34 @@ module.exports = {
 
   /*destroy: function (req, res) {
 
-    if (!req.param('id')){
-      return res.badRequest('id is a required parameter.');
-    }
+   if (!req.param('id')){
+   return res.badRequest('id is a required parameter.');
+   }
 
-    User.destroy({
-      id: req.param('id')
-    }).exec(function (err, usersDestroyed){
-      if (err) return res.negotiate(err);
-      if (usersDestroyed.length === 0) {
-        return res.notFound();
-      }
+   User.destroy({
+   id: req.param('id')
+   }).exec(function (err, usersDestroyed){
+   if (err) return res.negotiate(err);
+   if (usersDestroyed.length === 0) {
+   return res.notFound();
+   }
 
-      // Let everyone who's subscribed know that this user is deleted.
-      User.publishDestroy(req.param('id'), undefined, {
-        previous: {
-          name: usersDestroyed[0].name
-        }
-      });
+   // Let everyone who's subscribed know that this user is deleted.
+   User.publishDestroy(req.param('id'), undefined, {
+   previous: {
+   name: usersDestroyed[0].name
+   }
+   });
 
-      // Unsubscribe all the sockets (e.g. browser tabs) who are currently
-      // subscribed to this particular user.
-      _.each(User.subscribers(usersDestroyed[0]), function(socket) {
-        User.unsubscribe(socket, usersDestroyed[0]);
-      });
+   // Unsubscribe all the sockets (e.g. browser tabs) who are currently
+   // subscribed to this particular user.
+   _.each(User.subscribers(usersDestroyed[0]), function(socket) {
+   User.unsubscribe(socket, usersDestroyed[0]);
+   });
 
-      return res.ok();
-    });
-  },*/
+   return res.ok();
+   });
+   },*/
 
   /**
    *
@@ -69,12 +121,12 @@ module.exports = {
 
       // Let everyone who's subscribed know that this user is deleted.
       /*
-      User.publishDestroy(req.param('id'), undefined, {
-        previous: {
-          name: usersDestroyed[0].name
-        }
-      });
-      */
+       User.publishDestroy(req.param('id'), undefined, {
+       previous: {
+       name: usersDestroyed[0].name
+       }
+       });
+       */
 
       return res.ok();
     });
@@ -444,17 +496,17 @@ module.exports = {
               function(err) {
                 if (err) return res.negotiate(err);
 
-            });
+              });
 
             // 2. issue a user token using exec
             /*
-            User.update(user.id, {token: jwtToken.issueToken({userid: user.id})}).exec(
-              function(err,updated) {
-                if (err) return res.negotiate(err);
+             User.update(user.id, {token: jwtToken.issueToken({userid: user.id})}).exec(
+             function(err,updated) {
+             if (err) return res.negotiate(err);
 
-                // res.json([statusCode, ... ] data);
-                res.json(200, {user: updated[0]});
-              });*/
+             // res.json([statusCode, ... ] data);
+             res.json(200, {user: updated[0]});
+             });*/
 
             // 2. issue a user token - another way
             // Keep in mind that function(err,updated) is used this way
@@ -466,7 +518,7 @@ module.exports = {
                 res.json(200, {user: updated[0]});
               });
           }
-      });
+        });
     });
   },
   /**
@@ -604,31 +656,6 @@ module.exports = {
       })
   },
 
-  /*
-   findAll: function (req, res) {
-   User.find().done(function (err, users) {
-   if (err) {
-   res.send(400);
-   } else {
-   res.send(users);
-   }
-   });
-   },
-
-   findByName: function(req, res) {
-   var name = req.param('name');
-   User.findByName(name).done(function (err, users) {
-   if (err) {
-   res.send(400);
-   } else {
-   res.send(users);
-   }
-   });
-   }
-
-   */
-
-
 
   /**
    * Returns a list of users
@@ -648,9 +675,9 @@ module.exports = {
 
 
     var likeObj =
-        {
-          name:'%'+textForSearch+'%'
-        };
+    {
+      name:'%'+textForSearch+'%'
+    };
 
     var likeObject = {
       like:{
@@ -678,7 +705,7 @@ module.exports = {
 
         //console.log(textForSearch);
         //User.find().limit(pagesize).skip(skipcount).exec({
-        User.find(likewithpaginationObject).populate('cars').exec({
+        User.find(likewithpaginationObject).populate('avatar').exec({
 
           error: function (err) {
             return res.negotiate(err);
@@ -689,10 +716,22 @@ module.exports = {
             //var totalNumberOfUsers = 0;
             var prunedUsers = [];
 
+
+
             //console.log("users = " + JSON.stringify(users));
 
             // Loop through each user...
             _.each(users, function (user) {
+
+                var userAvatar = null;
+                var userAvatarFile = null;
+                //console.log("user = " + JSON.stringify(user));
+
+                if(user.avatar!==undefined)
+                //console.log("user.avatar = "+JSON.stringify(user.avatar['id']));
+                {
+                  userAvatarFile = getUserAvatarFile(user.avatar["id"]);
+                }
 
                 // Only send down white-listed attributes
                 // (e.g. strip out encryptedPassword from each user)
@@ -701,9 +740,7 @@ module.exports = {
                   name: user.name,
                   email: user.email,
                   title: user.title,
-                  //cars: user.cars[0],
-                  gravatarUrl: user.gravatarUrl,
-                  //admin: user.admin,
+                  file: userAvatarFile,
                   lastLoggedIn: user.lastLoggedIn,
 
                   // Add a property called "msUntilInactive" so the front-end code knows
@@ -891,42 +928,42 @@ module.exports = {
 
                   //req.param('cars') is an array of CAR numbers
                   /*var carList = req.param('arrayOfCars');
-                    for(i=0;i<carList.length;i++) {
-                      Car.create({
-                        number: carList[i],
-                        owner: newUser.id
-                      })
-                        .then(function (cars) {
-                          // Then we can associate the cars with the user.
-                          newUser.cars = [cars];
+                   for(i=0;i<carList.length;i++) {
+                   Car.create({
+                   number: carList[i],
+                   owner: newUser.id
+                   })
+                   .then(function (cars) {
+                   // Then we can associate the cars with the user.
+                   newUser.cars = [cars];
 
-                          // And save the user.
-                          return newUser.save();
-                        })
-                        .then(function () {
-                          // And now we want to get the new user back,
-                          // and populate the cars the user might own.
-                          return newUser.populate('cars');
-                        })
-                        .then(
-                        console.log
-                      )
-                        .catch(
-                        console.error
-                      );
+                   // And save the user.
+                   return newUser.save();
+                   })
+                   .then(function () {
+                   // And now we want to get the new user back,
+                   // and populate the cars the user might own.
+                   return newUser.populate('cars');
+                   })
+                   .then(
+                   console.log
+                   )
+                   .catch(
+                   console.error
+                   );
 
-                    }*/
+                   }*/
 
 
 
                   // Let other subscribed sockets know that the user was created.
                   /*User.publishCreate({
-                    id: newUser.id,
-                    name: newUser.name,
-                    title: newUser.title,
-                    email: newUser.email,
-                    lastLoggedIn: newUser.lastLoggedIn
-                  });*/
+                   id: newUser.id,
+                   name: newUser.name,
+                   title: newUser.title,
+                   email: newUser.email,
+                   lastLoggedIn: newUser.lastLoggedIn
+                   });*/
 
                   // Send back the id of the new user
                   return res.json(200,{

@@ -63,7 +63,7 @@ module.exports.policies = {
   },
 
   'FileController': {
-    //'uploadAvatar': ['isAdmin']
+    'uploadAvatar': ['isAdmin']
   }
 
   /*
